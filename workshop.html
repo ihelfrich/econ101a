@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Targeted Workshop — Econ 101A</title>
+<link rel="stylesheet" href="style.css"/>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+/* ── Workshop-specific styles ──────────────────────────────── */
+.ws-hero {
+  background: #0a1628; color: #fff;
+  padding: 36px 48px 30px; border-bottom: 3px solid #FDB515;
+}
+.ws-hero h1 { font-size: 1.9rem; margin: 0 0 6px; font-family: Georgia, serif; }
+.ws-hero p  { margin: 0; color: #94a8c4; font-size: .95rem; }
+.ws-badge   { display:inline-block; background:#FDB515; color:#0a1628;
+              font-size:.75rem; font-weight:700; padding:3px 10px;
+              border-radius:20px; margin-bottom:12px; letter-spacing:.05em; }
+
+.ws-main { max-width: 860px; margin: 0 auto; padding: 36px 32px 80px; }
+
+/* ── Problem card ─────────────────────────────────────────── */
+.ws-card {
+  background: #fff; border: 1.5px solid #e2e6ee;
+  border-radius: 10px; margin-bottom: 36px;
+  box-shadow: 0 2px 12px rgba(0,50,98,.06);
+  overflow: hidden;
+}
+.ws-card-header {
+  background: #003262; color: #fff;
+  padding: 16px 24px; display:flex; align-items:center; gap:14px;
+}
+.ws-card-header h2 { margin:0; font-size:1.05rem; font-weight:700; }
+.ws-card-header .pts { margin-left:auto; font-size:.8rem;
+  background: rgba(253,181,21,.2); color: #FDB515;
+  padding: 3px 10px; border-radius: 12px; white-space:nowrap; }
+.ws-body { padding: 24px 28px; }
+
+/* ── Drill section ────────────────────────────────────────── */
+.drill-section {
+  background: linear-gradient(135deg, #001f4d 0%, #003262 100%);
+  color: #e6edf3; border-radius: 10px;
+  padding: 28px 32px; margin-bottom: 36px;
+}
+.drill-section h2 { color: #FDB515; margin: 0 0 8px;
+  font-family: Georgia, serif; font-size: 1.4rem; }
+.drill-section p.intro { color: #94a8c4; margin: 0 0 24px; font-size:.93rem; }
+
+.drill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:600px){ .drill-grid { grid-template-columns: 1fr; } }
+
+.drill-item {
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px; padding: 16px;
+}
+.drill-item .q { font-size: .95rem; margin-bottom: 10px; color: #c9d8ea; }
+.drill-item details summary {
+  cursor: pointer; font-size: .82rem; color: #FDB515;
+  font-weight: 600; user-select: none; list-style: none;
+}
+.drill-item details summary::before { content: '▶ '; font-size:.7rem; }
+.drill-item details[open] summary::before { content: '▼ '; }
+.drill-item .ans {
+  margin-top: 10px; padding: 10px 14px;
+  background: rgba(253,181,21,.1); border-left: 3px solid #FDB515;
+  border-radius: 4px; font-size:.88rem; color:#e6edf3;
+}
+
+/* ── Exam quote ───────────────────────────────────────────── */
+.exam-quote {
+  border-left: 4px solid #FDB515; background: #fffdf4;
+  padding: 14px 18px; border-radius: 0 6px 6px 0;
+  margin-bottom: 20px; font-size: .92rem; color: #333;
+  font-style: italic;
+}
+.exam-quote strong { font-style: normal; color: #003262; }
+
+/* ── Steps ────────────────────────────────────────────────── */
+.solve-steps { counter-reset: step; margin: 0; padding: 0; list-style: none; }
+.step-block { display: flex; gap: 16px; margin-bottom: 22px; align-items: flex-start; }
+.step-num {
+  flex-shrink: 0; width: 32px; height: 32px;
+  background: #003262; color: #fff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: .85rem; margin-top: 2px;
+}
+.step-content { flex: 1; }
+.step-name { font-weight: 700; color: #003262; font-size:.9rem;
+  text-transform: uppercase; letter-spacing:.05em; margin-bottom: 4px; }
+.step-why { font-style: italic; color: #666; font-size: .85rem; margin-bottom: 8px; }
+.step-math { font-size: .93rem; line-height: 1.7; }
+
+/* ── Callout boxes ────────────────────────────────────────── */
+.trap-box {
+  background: #fff0f0; border-left: 4px solid #c0392b;
+  padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0;
+  font-size: .88rem;
+}
+.trap-box strong { color: #c0392b; }
+
+.insight-box {
+  background: #fffbea; border-left: 4px solid #FDB515;
+  padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0;
+  font-size: .88rem;
+}
+.insight-box strong { color: #a07000; }
+
+.correct-box {
+  background: #f0fff4; border-left: 4px solid #27ae60;
+  padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0;
+  font-size: .88rem;
+}
+.correct-box strong { color: #1a7a42; }
+
+/* ── Details solution toggle ──────────────────────────────── */
+.ws-card details summary {
+  cursor: pointer; background: #f4f6fb; border: 1.5px solid #003262;
+  color: #003262; font-weight: 700; font-size: .9rem;
+  padding: 11px 18px; border-radius: 6px; user-select: none;
+  list-style: none; margin-bottom: 4px;
+}
+.ws-card details summary::before { content: '▶ Show Full Solution — '; }
+.ws-card details[open] summary::before { content: '▼ Hide Solution — '; }
+.ws-card details[open] summary { border-radius: 6px 6px 0 0; margin-bottom: 0; }
+.solution-body {
+  border: 1.5px solid #003262; border-top: none;
+  border-radius: 0 0 6px 6px; padding: 24px 24px 8px;
+  background: #fafbff;
+}
+
+/* ── Self-test ────────────────────────────────────────────── */
+.self-test {
+  background: #f0fff4; border: 1.5px solid #27ae60;
+  border-radius: 8px; padding: 18px 22px; margin-top: 20px;
+}
+.self-test h4 { color: #1a7a42; margin: 0 0 8px; font-size:.92rem; }
+.self-test details summary {
+  cursor: pointer; color: #1a7a42; font-weight:600;
+  font-size:.83rem; list-style:none;
+}
+.self-test details summary::before { content: '▶ '; }
+.self-test details[open] summary::before { content: '▼ '; }
+.self-test .ans-body { margin-top:10px; font-size:.88rem; }
+
+/* ── Progress bar ─────────────────────────────────────────── */
+.progress-bar {
+  background: #e4e8f0; border-radius: 20px;
+  height: 6px; margin-bottom: 32px; overflow: hidden;
+}
+.progress-fill { height:100%; background: linear-gradient(90deg,#003262,#FDB515);
+  width: 0; border-radius: 20px; transition: width .4s; }
+
+/* ── Sidebar ──────────────────────────────────────────────── */
+.sidebar { width: 260px; background: #0a1628; position: fixed;
+  top: 0; left: 0; height: 100vh; overflow-y: auto;
+  padding: 24px 0; z-index: 100; display: flex; flex-direction: column; }
+.sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 16px; }
+.sidebar-logo .logo-icon { font-size:1.5rem; color:#FDB515; }
+.sidebar-logo .logo-title { font-size:.95rem; font-weight:700; color:#fff; }
+.sidebar-logo .logo-sub { font-size:.72rem; color:#6b8099; }
+nav.ws-nav { padding: 0 16px; flex:1; }
+nav.ws-nav a { display:block; padding:7px 12px; color:#94a8c4;
+  text-decoration:none; border-radius:5px; font-size:.83rem;
+  transition:background .15s,color .15s; margin-bottom:2px; }
+nav.ws-nav a:hover { background:rgba(255,255,255,.07); color:#fff; }
+nav.ws-nav a.active { background:rgba(253,181,21,.12); color:#FDB515; }
+nav.ws-nav .nav-label { font-size:.68rem; font-weight:700; letter-spacing:.1em;
+  color:#4a6080; text-transform:uppercase; padding:12px 12px 4px; }
+.sidebar-footer { padding:16px 20px; border-top:1px solid rgba(255,255,255,.08); }
+.sidebar-footer a { color:#6b8099; font-size:.78rem; text-decoration:none; }
+.sidebar-footer a:hover { color:#FDB515; }
+
+.layout-wrapper { margin-left: 260px; }
+.ws-hero { margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">∂</div>
+    <div class="logo-title">Econ 101A</div>
+    <div class="logo-sub">Targeted Workshop</div>
+  </div>
+  <nav class="ws-nav">
+    <div class="nav-label">Drills</div>
+    <a href="#drill-derivatives">① Partial Derivatives</a>
+    <a href="#p1">② Quasilinear UMP</a>
+    <a href="#p2">③ Producer Theory</a>
+    <a href="#p3">④ GE — Linear Utility</a>
+    <a href="#cv">⑤ Compensating Variation</a>
+    <a href="#pareto">⑥ Pareto Set Drill</a>
+    <div class="nav-label">Site</div>
+    <a href="index.html">← Main Guide</a>
+    <a href="problems.html">Worked Problems</a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="index.html">ihelfrich.github.io/econ101a</a>
+  </div>
+</aside>
+
+<div class="layout-wrapper">
+
+<!-- Hero -->
+<div class="ws-hero">
+  <div class="ws-badge">TARGETED WORKSHOP</div>
+  <h1>Skill Repair &amp; Drill</h1>
+  <p>Six focused modules targeting the exact mechanics that break down under exam pressure.</p>
+</div>
+
+<div class="ws-main">
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODULE 1 — PARTIAL DERIVATIVES CLINIC
+     ═══════════════════════════════════════════════════════════ -->
+<div class="drill-section" id="drill-derivatives">
+  <h2>① The Partial Derivative Problem</h2>
+  <p class="intro">
+    This is the single most important module. Every Lagrangian-based problem in this course
+    requires you to take partial derivatives correctly. One wrong rule at this step breaks
+    the entire solution. The rule is simple: <strong style="color:#FDB515">when you differentiate with respect to $x$,
+    everything that doesn't contain $x$ is a constant and vanishes.</strong>
+  </p>
+
+  <div class="correct-box" style="background:rgba(39,174,96,.12);border-color:#27ae60;margin-bottom:20px;">
+    <strong style="color:#4ade80;">The law to tattoo on your brain:</strong><br>
+    If $f(x,y) = x + 4\ln y$, then:
+    $$\frac{\partial f}{\partial x} = 1 \qquad \frac{\partial f}{\partial y} = \frac{4}{y}$$
+    The term $4\ln y$ does NOT appear in $\partial f/\partial x$ — it has no $x$ in it.
+    The term $x$ does NOT appear in $\partial f/\partial y$ — it has no $y$ in it.
+  </div>
+
+  <div class="trap-box" style="background:rgba(192,57,43,.15);border-color:#c0392b;color:#ffdad7;margin-bottom:20px;">
+    <strong style="color:#ff6b6b;">⚠️ The exact error to avoid:</strong><br>
+    Writing $\frac{\partial}{\partial x}[x + 4\ln y] = 1 + 4\ln(y)$ — <strong>WRONG.</strong><br>
+    Writing $\frac{\partial}{\partial y}[x + 4\ln y] = x + \frac{4}{y}$ — <strong>WRONG.</strong><br>
+    Both errors come from carrying terms that belong to the OTHER variable.
+  </div>
+
+  <p style="color:#94a8c4;margin-bottom:16px;font-size:.9rem;">
+    Practice each one. Read the question, predict the answer, then reveal. Do this until it feels automatic.
+  </p>
+
+  <div class="drill-grid">
+
+    <div class="drill-item">
+      <div class="q">$f(x,y) = 3x + 2\ln y$<br>Find $\dfrac{\partial f}{\partial x}$ and $\dfrac{\partial f}{\partial y}$.</div>
+      <details><summary>Show answer</summary>
+      <div class="ans">$\dfrac{\partial f}{\partial x} = 3$ (the $2\ln y$ vanishes — no $x$)<br>
+      $\dfrac{\partial f}{\partial y} = \dfrac{2}{y}$ (the $3x$ vanishes — no $y$)</div></details>
+    </div>
+
+    <div class="drill-item">
+      <div class="q">Lagrangian: $\mathcal{L} = x + 4\ln y + \lambda(12 - x - py)$<br>Find $\dfrac{\partial \mathcal{L}}{\partial x}$.</div>
+      <details><summary>Show answer</summary>
+      <div class="ans">$\dfrac{\partial \mathcal{L}}{\partial x} = 1 + 0 + \lambda(0 - 1) = 1 - \lambda$<br>
+      The $4\ln y$ term has zero $x$-content. The constraint gives $-\lambda \cdot 1$.</div></details>
+    </div>
+
+    <div class="drill-item">
+      <div class="q">Same Lagrangian: $\mathcal{L} = x + 4\ln y + \lambda(12 - x - py)$<br>Find $\dfrac{\partial \mathcal{L}}{\partial y}$.</div>
+      <details><summary>Show answer</summary>
+      <div class="ans">$\dfrac{\partial \mathcal{L}}{\partial y} = 0 + \dfrac{4}{y} + \lambda(0 - p) = \dfrac{4}{y} - \lambda p$<br>
+      The $x$ term is a constant w.r.t. $y$. The constraint gives $-\lambda p$.</div></details>
+    </div>
+
+    <div class="drill-item">
+      <div class="q">$u(x,y) = x^{1/2}y^{1/2}$<br>Find $\dfrac{\partial u}{\partial x}$ and $\dfrac{\partial u}{\partial y}$.</div>
+      <details><summary>Show answer</summary>
+      <div class="ans">$\dfrac{\partial u}{\partial x} = \dfrac{1}{2}x^{-1/2}y^{1/2} = \dfrac{y^{1/2}}{2x^{1/2}}$<br>
+      $\dfrac{\partial u}{\partial y} = \dfrac{1}{2}x^{1/2}y^{-1/2} = \dfrac{x^{1/2}}{2y^{1/2}}$<br>
+      MRS $= \dfrac{\partial u/\partial x}{\partial u/\partial y} = \dfrac{y}{x}$</div></details>
+    </div>
+
+    <div class="drill-item">
+      <div class="q">$\mathcal{L} = x^{1/2}y^{1/2} + \lambda(m - p_x x - p_y y)$<br>Find both $\dfrac{\partial \mathcal{L}}{\partial x}$ and $\dfrac{\partial \mathcal{L}}{\partial y}$, set to zero.</div>
+      <details><summary>Show answer</summary>
+      <div class="ans">
+        $\dfrac{\partial \mathcal{L}}{\partial x} = \dfrac{y^{1/2}}{2x^{1/2}} - \lambda p_x = 0$<br>
+        $\dfrac{\partial \mathcal{L}}{\partial y} = \dfrac{x^{1/2}}{2y^{1/2}} - \lambda p_y = 0$<br>
+        Divide: $\dfrac{y}{x} = \dfrac{p_x}{p_y}$ → MRS = price ratio ✓
+      </div></details>
+    </div>
+
+    <div class="drill-item">
+      <div class="q">$u(x,y) = \ln x + \beta\ln y$<br>Write the Lagrangian and both FOCs for the UMP with prices $p_x, p_y$ and income $m$.</div>
+      <details><summary>Show answer</summary>
+      <div class="ans">$\mathcal{L} = \ln x + \beta\ln y + \lambda(m - p_x x - p_y y)$<br>
+        $\partial/\partial x$: $\dfrac{1}{x} - \lambda p_x = 0 \Rightarrow \lambda = \dfrac{1}{p_x x}$<br>
+        $\partial/\partial y$: $\dfrac{\beta}{y} - \lambda p_y = 0 \Rightarrow \lambda = \dfrac{\beta}{p_y y}$<br>
+        Equate: $\dfrac{1}{p_x x} = \dfrac{\beta}{p_y y} \Rightarrow y = \dfrac{\beta p_x}{p_y}x$</div></details>
+    </div>
+
+    <div class="drill-item">
+      <div class="q">Production: $y = L^{1/4}K^{1/4}$<br>Find $MP_L$ and $MP_K$.</div>
+      <details><summary>Show answer</summary>
+      <div class="ans">$MP_L = \dfrac{\partial y}{\partial L} = \dfrac{1}{4}L^{-3/4}K^{1/4}$<br>
+        $MP_K = \dfrac{\partial y}{\partial K} = \dfrac{1}{4}L^{1/4}K^{-3/4}$<br>
+        MRTS $= \dfrac{MP_L}{MP_K} = \dfrac{K}{L}$</div></details>
+    </div>
+
+    <div class="drill-item">
+      <div class="q">$f(x,y) = x^2 + 3xy - 2y^2$<br>Find both partials. (Careful: $3xy$ contains both!)</div>
+      <details><summary>Show answer</summary>
+      <div class="ans">$\dfrac{\partial f}{\partial x} = 2x + 3y$ (the $3xy$ term differentiates to $3y$)<br>
+        $\dfrac{\partial f}{\partial y} = 3x - 4y$ (the $3xy$ term differentiates to $3x$)<br>
+        Cross-terms: both partials keep the OTHER variable as a coefficient.</div></details>
+    </div>
+
+  </div><!-- /drill-grid -->
+</div><!-- /drill-section -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODULE 2 — QUASILINEAR UMP (THE EXAM PROBLEM)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="ws-card" id="p1">
+  <div class="ws-card-header">
+    <h2>② Quasilinear Utility — Full Template</h2>
+    <span class="pts">Problem 1 Pattern</span>
+  </div>
+  <div class="ws-body">
+
+    <div class="ws-badge" style="background:#e8f0ff;color:#003262;">QUASILINEAR UMP</div>
+    <p style="font-size:.88rem;color:#555;margin:6px 0 16px;">
+      Brain hook: You love sushi ($y$) but you'd happily trade any sushi for cash ($x$, the numeraire). Your marginal utility from $x$ is just 1 — constant. That's what quasilinear means.
+    </p>
+
+    <div class="exam-quote">
+      <strong>The Problem.</strong> A consumer has utility $u(x,y) = x + 4\ln y$. Prices: $p_x = 1$, $p_y = p$. Income $m = 12$.<br><br>
+      <strong>(a)</strong> Derive Marshallian demands $x^*(p)$ and $y^*(p)$. Does demand for $y$ depend on income?<br>
+      <strong>(b)</strong> Price of $y$ rises from $p=2$ to $p=4$. Find initial and final consumption bundles.<br>
+      <strong>(c)</strong> Compute the compensating variation.<br>
+      <strong>(d)</strong> Compare CV to the cost increase of keeping initial $y$ after the price rise.
+    </div>
+
+    <details>
+    <summary>Full Solution — parts (a) through (d)</summary>
+    <div class="solution-body">
+
+      <div class="step-block">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-name">Write the Lagrangian (correctly)</div>
+          <div class="step-why">We maximize $u$ subject to the budget — the Lagrangian packages both.</div>
+          <div class="step-math">
+            $$\mathcal{L} = x + 4\ln y + \lambda(12 - x - py)$$
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-name">Take the three FOCs — carefully</div>
+          <div class="step-why">Each FOC is a partial derivative of $\mathcal{L}$. Each variable $x$, $y$, $\lambda$ gets its own equation.</div>
+          <div class="step-math">
+            $$\frac{\partial \mathcal{L}}{\partial x} = \underbrace{1}_{\partial x/\partial x} + \underbrace{0}_{4\ln y\text{ has no }x} + \lambda \cdot \underbrace{(-1)}_{\partial(-x)/\partial x} = 1 - \lambda = 0$$
+            $$\frac{\partial \mathcal{L}}{\partial y} = \underbrace{0}_{x\text{ has no }y} + \underbrace{\frac{4}{y}}_{\partial(4\ln y)/\partial y} + \lambda \cdot \underbrace{(-p)}_{\partial(-py)/\partial y} = \frac{4}{y} - \lambda p = 0$$
+            $$\frac{\partial \mathcal{L}}{\partial \lambda} = 12 - x - py = 0$$
+          </div>
+          <div class="trap-box">
+            <strong>⚠️ The critical trap:</strong> $4\ln y$ does NOT contribute to $\partial\mathcal{L}/\partial x$. The $x$ term does NOT contribute to $\partial\mathcal{L}/\partial y$. These terms are constants with respect to the other variable.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-name">Read off $\lambda$ and solve for $y^*$</div>
+          <div class="step-why">The first FOC gives $\lambda$ directly. The second FOC then solves for $y^*$.</div>
+          <div class="step-math">
+            From FOC(x): $\lambda = 1$<br><br>
+            Plug into FOC(y): $\dfrac{4}{y} = \lambda p = p$
+            $$\boxed{y^*(p) = \frac{4}{p}}$$
+            <strong>Key observation:</strong> No $m$ appears. The demand for $y$ is income-independent. This is the signature of quasilinear utility.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-name">Use the budget to find $x^*$</div>
+          <div class="step-why">We have $y^*$; substitute into the binding budget constraint to get $x^*$.</div>
+          <div class="step-math">
+            $x + py = 12 \Rightarrow x^* = 12 - p \cdot y^* = 12 - p \cdot \frac{4}{p} = 12 - 4$
+            $$\boxed{x^*(p) = 8}$$
+            Also income-independent! (Because the "fixed spend" on $y$ is always $p \cdot (4/p) = 4$, regardless of $p$.)
+          </div>
+          <div class="insight-box">
+            <strong>💡 The quasilinear pattern:</strong> When $u = x + v(y)$ and $p_x = 1$, the FOC for $y$ pins down $y^*$ from $v'(y^*) = p_y$. This is always independent of income. Then $x^*$ soaks up whatever income is left. Think of $x$ as "savings" and $y$ as a fixed-quantity purchase.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-name">Part (b): Plug in $p = 2$ then $p = 4$</div>
+          <div class="step-why">No new technique needed — just evaluate the demand functions.</div>
+          <div class="step-math">
+            <strong>Initial</strong> ($p = 2$): $y_0^* = 4/2 = 2$, $x_0^* = 8$ → bundle $(8,\ 2)$<br>
+            <strong>Final</strong> ($p = 4$): $y_1^* = 4/4 = 1$, $x_1^* = 8$ → bundle $(8,\ 1)$<br><br>
+            Observe: $x$ doesn't move at all. All adjustment happens in $y$ (cut in half).
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-name">Part (c): Compensating Variation via the demand integral</div>
+          <div class="step-why">CV = area under the (Hicksian = Marshallian) demand curve between the two prices. Quasilinear utility is special: Hicksian and Marshallian demands coincide for $y$ (no income effect), so we can just integrate the Marshallian demand.</div>
+          <div class="step-math">
+            $$CV = \int_{p_0}^{p_1} y^*(p)\, dp = \int_2^4 \frac{4}{p}\, dp = \Big[4\ln p\Big]_2^4$$
+            $$= 4\ln 4 - 4\ln 2 = 4\ln\!\left(\frac{4}{2}\right) = 4\ln 2 \approx 2.77$$
+          </div>
+          <div class="trap-box">
+            <strong>⚠️ Most common wrong approach:</strong> Trying to integrate the MRS or an unsimplified expression. Once you have $y^*(p) = 4/p$, the integral is immediate — it's just $\int 4/p\, dp = 4\ln p$.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-name">Part (d): Compare to forced-quantity cost increase</div>
+          <div class="step-why">If the consumer were frozen at $y_0 = 2$ and forced to pay the new price, how much extra would they spend? Compare that to CV.</div>
+          <div class="step-math">
+            <strong>Cost of $y_0 = 2$ at new price:</strong> $p_1 \cdot y_0 = 4 \times 2 = 8$<br>
+            <strong>Cost of $y_0 = 2$ at old price:</strong> $p_0 \cdot y_0 = 2 \times 2 = 4$<br>
+            <strong>Cost increase:</strong> $\Delta = 8 - 4 = 4$<br><br>
+            $CV = 4\ln 2 \approx 2.77 < 4 = \Delta$<br><br>
+            <strong>CV is smaller.</strong> The consumer doesn't need full compensation because she can substitute — she'll buy less $y$ at the higher price and adjust $x$ upward. The option to adjust is worth something; it reduces the required compensation.
+          </div>
+          <div class="insight-box">
+            <strong>💡 The intuition:</strong> CV < forced-cost-increase whenever the consumer can substitute. If she were frozen at $y_0$, she'd need $\Delta = 4$ extra dollars. But since she can and will cut $y$ to 1, she only needs $4\ln 2 \approx 2.77$ extra to reach the same utility.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /solution-body -->
+    </details>
+
+    <div class="self-test">
+      <h4>🎯 Try it yourself — same structure, different function</h4>
+      <p style="font-size:.88rem;margin:0 0 10px;">
+        $u(x,y) = x + 6\ln y$, $p_x = 1$, $p_y = p$, $m = 20$.<br>
+        Find $x^*(p)$, $y^*(p)$, compute bundles at $p=3$ and $p=6$, and compute CV.
+      </p>
+      <details><summary>Show answer</summary>
+      <div class="ans-body">
+        FOC(x): $\lambda = 1$. FOC(y): $6/y = p \Rightarrow y^* = 6/p$.<br>
+        Budget: $x^* = 20 - p(6/p) = 20 - 6 = 14$.<br><br>
+        At $p = 3$: $(14,\ 2)$. At $p = 6$: $(14,\ 1)$.<br><br>
+        $CV = \int_3^6 \frac{6}{p}\,dp = [6\ln p]_3^6 = 6\ln 6 - 6\ln 3 = 6\ln 2 \approx 4.16$
+      </div>
+      </details>
+    </div>
+
+  </div>
+</div><!-- /ws-card P1 -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODULE 3 — PRODUCER THEORY FULL CHAIN
+     ═══════════════════════════════════════════════════════════ -->
+<div class="ws-card" id="p2">
+  <div class="ws-card-header">
+    <h2>③ Producer Theory — The Complete Chain</h2>
+    <span class="pts">Problem 2 Pattern</span>
+  </div>
+  <div class="ws-body">
+
+    <div class="ws-badge" style="background:#e8f0ff;color:#003262;">CMP → C(y) → MC → SUPPLY → EQUILIBRIUM</div>
+    <p style="font-size:.88rem;color:#555;margin:6px 0 16px;">
+      Brain hook: You run a factory. First minimize your costs for any given output level. That gives $C(y)$. From $C(y)$ derive MC and AC. MC = P tells you supply. Then clear the market.
+    </p>
+
+    <div class="exam-quote">
+      <strong>The Problem.</strong> A firm has $y = L^{1/4}K^{1/4}$, input prices $w = r = 1$, fixed cost $F = 2$. Market demand $Q^D = 36 - p$.<br><br>
+      <strong>(a)</strong> Derive cost function $C(y)$.<br>
+      <strong>(b)</strong> Derive MC and AC. Find the supply function. Which prices induce production?<br>
+      <strong>(c)</strong> $N = 4$ firms. Find competitive equilibrium $(p^*, Q^*, y^*, \pi^*)$.<br>
+      <strong>(d)</strong> Free entry. Find equilibrium $(p^*, Q^*, y^*, N^*)$.
+    </div>
+
+    <details>
+    <summary>Full Solution — all four parts</summary>
+    <div class="solution-body">
+
+      <div class="step-block">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-name">Cost Minimization — find optimal input ratio</div>
+          <div class="step-why">At the cost minimum, MRTS = input price ratio. This pins down how L and K relate.</div>
+          <div class="step-math">
+            $MP_L = \tfrac{1}{4}L^{-3/4}K^{1/4}$, $MP_K = \tfrac{1}{4}L^{1/4}K^{-3/4}$<br><br>
+            $$\text{MRTS} = \frac{MP_L}{MP_K} = \frac{K}{L} = \frac{w}{r} = \frac{1}{1} = 1 \implies K^* = L^*$$
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-name">Substitute into production constraint to get $L^*(y)$</div>
+          <div class="step-why">With $K = L$, the production function simplifies. Solve for how much $L$ you need to produce $y$.</div>
+          <div class="step-math">
+            $y = L^{1/4}K^{1/4} = L^{1/4}L^{1/4} = L^{1/2}$<br><br>
+            $\implies L^* = y^2$, $K^* = y^2$
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-name">Write the cost function</div>
+          <div class="step-why">Total cost = variable inputs + fixed cost. Plug in optimal $L^*, K^*$.</div>
+          <div class="step-math">
+            $$C(y) = w \cdot L^* + r \cdot K^* + F = 1 \cdot y^2 + 1 \cdot y^2 + 2$$
+            $$\boxed{C(y) = 2y^2 + 2}$$
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-name">Derive MC and AC, find minimum AC</div>
+          <div class="step-why">The firm produces only if price covers average cost. Minimum AC gives the shut-down price threshold.</div>
+          <div class="step-math">
+            $MC(y) = C'(y) = 4y$<br>
+            $AC(y) = C(y)/y = 2y + 2/y$<br><br>
+            Min AC: $\dfrac{d(AC)}{dy} = 2 - \dfrac{2}{y^2} = 0 \implies y = 1$<br>
+            $AC_{\min} = 2(1) + 2/1 = 4$<br><br>
+            <strong>Shut-down rule:</strong> Produce if and only if $p \geq AC_{\min} = 4$.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-name">Individual supply function</div>
+          <div class="step-why">Competitive firm sets $MC = p$. Solve for $y$ in terms of $p$.</div>
+          <div class="step-math">
+            $4y = p \implies y^s(p) = \dfrac{p}{4}$ for $p \geq 4$, else $y = 0$.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-name">Part (c): N = 4 firms, market equilibrium</div>
+          <div class="step-why">Market supply = N × individual supply. Set equal to demand.</div>
+          <div class="step-math">
+            $Q^S = 4 \cdot \dfrac{p}{4} = p$<br><br>
+            Market clearing: $Q^S = Q^D \implies p = 36 - p \implies 2p = 36$
+            $$p^* = 18, \quad Q^* = 18, \quad y^* = 18/4 = 4.5$$
+            Profit per firm: $\pi^* = p^*y^* - C(y^*) = 18(4.5) - 2(4.5)^2 - 2 = 81 - 40.5 - 2 = 38.5 > 0$
+          </div>
+          <div class="insight-box">
+            <strong>💡 Positive profit → entry will happen.</strong> At $p^* = 18 > AC_{\min} = 4$, each firm earns $38.5$. That's the signal for new firms to enter.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-name">Part (d): Free entry — zero-profit equilibrium</div>
+          <div class="step-why">Entry continues until profit = 0. Two conditions pin down $p^*$ and $y^*$: (1) $\pi = 0$ and (2) $MC = p$.</div>
+          <div class="step-math">
+            <strong>Condition 1</strong> — MC = P: $p = 4y$<br>
+            <strong>Condition 2</strong> — $\pi = 0$: $py - 2y^2 - 2 = 0$<br><br>
+            Substitute (1) into (2): $4y \cdot y - 2y^2 - 2 = 0 \implies 4y^2 - 2y^2 = 2 \implies 2y^2 = 2$
+            $$y^* = 1, \quad p^* = 4y^* = 4$$
+            $Q^* = 36 - 4 = 32$, $N^* = Q^*/y^* = 32$ firms
+          </div>
+          <div class="insight-box">
+            <strong>💡 The zero-profit condition means P = AC$_{\min}$.</strong> Firms produce at exactly the efficient scale where $AC = MC$. Price equals the bottom of the U-shaped AC curve. This is the long-run competitive equilibrium.
+          </div>
+          <div class="trap-box">
+            <strong>⚠️ Common error on zero-profit condition:</strong> Writing "zero profit condition: $MC = P$." That's actually the <em>profit-maximization</em> condition, not zero profit. Zero profit means $\pi = py - C(y) = 0$. Both conditions together are needed.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </details>
+
+    <div class="self-test">
+      <h4>🎯 Try it — same structure, different production function</h4>
+      <p style="font-size:.88rem;margin:0 0 10px;">
+        Firm has $y = L^{1/2}K^{1/2}$, $w = 4$, $r = 1$, $F = 9$. Demand $Q^D = 40 - p$.<br>
+        Find $C(y)$, $MC$, $AC_{\min}$. With free entry, find $p^*, y^*, N^*$.
+      </p>
+      <details><summary>Show answer</summary>
+      <div class="ans-body">
+        MRTS: $K/L = w/r = 4 \Rightarrow K = 4L$. Production: $y = L^{1/2}(4L)^{1/2} = 2L$, so $L^* = y/2$, $K^* = 2y$.<br>
+        $C(y) = 4(y/2) + 1(2y) + 9 = 2y + 2y + 9 = 4y + 9$. (Linear VC + fixed cost.)<br>
+        $MC = 4$. $AC = 4 + 9/y$.<br>
+        Min AC: $\frac{d}{dy}(4 + 9/y) = -9/y^2 \neq 0$ for finite $y$ — AC is always decreasing (no interior min). Entry drives $N \to \infty$?
+        Actually for linear MC with fixed cost, $p^* = MC = 4$ at free entry (since min AC → 4 as $y \to \infty$ — but this is increasing returns to scale, so the competitive equilibrium with free entry needs careful treatment). This is an important case to flag.
+      </div>
+      </details>
+    </div>
+
+  </div>
+</div><!-- /ws-card P2 -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODULE 4 — GE WITH LINEAR UTILITY (CORNER SOLUTIONS)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="ws-card" id="p3">
+  <div class="ws-card-header">
+    <h2>④ Walrasian GE — Linear + Cobb-Douglas</h2>
+    <span class="pts">Problem 3 Pattern</span>
+  </div>
+  <div class="ws-body">
+
+    <div class="ws-badge" style="background:#e8f0ff;color:#003262;">NON-STANDARD DEMAND · CORNER SOLUTIONS · MARKET CLEARING</div>
+    <p style="font-size:.88rem;color:#555;margin:6px 0 16px;">
+      Brain hook: One consumer treats $x$ and $y$ as perfect substitutes (just counts total goods). The other has standard Cobb-Douglas preferences. When one consumer is linear, their demand is all-or-nothing depending on the price ratio — this is the key twist.
+    </p>
+
+    <div class="exam-quote">
+      <strong>The Problem.</strong> $u_A = x_A + y_A$, $\omega_A = (4,2)$. $u_B = x_By_B$, $\omega_B = (2,4)$. Normalize $p_y = 1$, let $p_x = p$.<br><br>
+      <strong>(a)</strong> Show consumers want to trade away from endowment $E$. Use MRS.<br>
+      <strong>(b)</strong> Derive each consumer's Walrasian demand as a function of $p$.<br>
+      <strong>(c)</strong> Find $p^*$ and equilibrium allocations.<br>
+      <strong>(d)</strong> Characterize the Pareto set analytically.
+    </div>
+
+    <details>
+    <summary>Full Solution</summary>
+    <div class="solution-body">
+
+      <div class="step-block">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-name">Part (a): Check MRS at endowment</div>
+          <div class="step-why">If MRS ≠ price ratio, consumers are not at their optimum — they want to trade.</div>
+          <div class="step-math">
+            MRS$^A = u_{Ax}/u_{Ay} = 1/1 = 1$ (constant — linear utility always has MRS = 1)<br><br>
+            MRS$^B = u_{Bx}/u_{By} = y_B/x_B$. At endowment, B has $(2, 4)$:<br>
+            $\text{MRS}^B = 4/2 = 2$<br><br>
+            Since MRS$^B = 2 > 1 = $ MRS$^A$: B values $x$ more than A does. B will give up $y$ for $x$; A will give up $x$ for $y$. <strong>Both gain from trading</strong> at any price $p \in (1, 2)$.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-name">Part (b): Walrasian demand for A — the linear case</div>
+          <div class="step-why">With linear utility $u_A = x + y$, A always buys only the cheaper good (corner solution). The price ratio $p$ determines which corner.</div>
+          <div class="step-math">
+            Income: $m_A = p \cdot 4 + 1 \cdot 2 = 4p + 2$<br><br>
+            A's problem: maximize $x_A + y_A$ s.t. $px_A + y_A = 4p + 2$.<br><br>
+            A's MRS = 1. The good with the lower price per util gets all the spending:
+            $$x_A^*(p) = \begin{cases} \dfrac{4p+2}{p} = 4 + \dfrac{2}{p} & \text{if } p < 1 \text{ (x cheaper)} \\ \text{any } x_A \in \left[0,\, \frac{4p+2}{p}\right] & \text{if } p = 1 \text{ (indifferent)} \\ 0 & \text{if } p > 1 \text{ (y cheaper)} \end{cases}$$
+            $$y_A^*(p) = \begin{cases} 0 & \text{if } p < 1 \\ \text{any } y_A \in \left[0,\, 4p+2\right] & \text{if } p = 1 \\ 4p+2 & \text{if } p > 1 \end{cases}$$
+          </div>
+          <div class="insight-box">
+            <strong>💡 Linear utility = bang-for-buck shopping.</strong> If $p_x < p_y$ (i.e., $p < 1$), A spends everything on the cheaper $x$. If $p_x > p_y$, spend everything on $y$. If equal, A is indifferent — here the exact split is determined by market clearing.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-name">Part (b): Walrasian demand for B — Cobb-Douglas</div>
+          <div class="step-why">Standard equal-share Cobb-Douglas: half income on each good.</div>
+          <div class="step-math">
+            Income: $m_B = p \cdot 2 + 1 \cdot 4 = 2p + 4$<br>
+            $$x_B^*(p) = \frac{m_B}{2p} = \frac{2p+4}{2p} = 1 + \frac{2}{p}$$
+            $$y_B^*(p) = \frac{m_B}{2} = p + 2$$
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-name">Part (c): Market clearing — find $p^*$</div>
+          <div class="step-why">Try the case $p = 1$ first (the natural candidate when MRS^A = 1). Verify it clears both markets.</div>
+          <div class="step-math">
+            At $p = 1$: A is indifferent, so let A choose $x_A^*$ freely (to be determined by clearing).<br>
+            $x_B^*(1) = 1 + 2 = 3$, $y_B^*(1) = 1 + 2 = 3$<br><br>
+            Market clearing for $x$: $x_A^* + 3 = 6 \Rightarrow x_A^* = 3$<br>
+            A's budget at $p=1$: $x_A^* + y_A^* = m_A = 4(1)+2 = 6$, so $y_A^* = 6 - 3 = 3$<br><br>
+            Check $y$: $y_A^* + y_B^* = 3 + 3 = 6 = \bar{y}$ ✓
+            $$\boxed{p^* = 1, \quad (x_A^*, y_A^*) = (3,3), \quad (x_B^*, y_B^*) = (3,3)}$$
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-name">Part (d): Pareto set characterization</div>
+          <div class="step-why">Pareto efficiency: no reallocation makes everyone better off. For interior allocations, this requires equal MRS across consumers.</div>
+          <div class="step-math">
+            Interior Pareto condition: $\text{MRS}^A = \text{MRS}^B$<br>
+            $1 = y_B/x_B \Rightarrow y_B = x_B$<br><br>
+            In terms of A's allocation ($x_B = 6 - x_A$, $y_B = 6 - y_A$):
+            $$6 - y_A = 6 - x_A \implies \boxed{y_A = x_A, \quad x_A \in [0,6]}$$
+            <strong>The contract curve is the 45° diagonal of the Edgeworth box</strong> (the line from $O_A$ to $O_B$ where $y_A = x_A$).
+          </div>
+          <div class="insight-box">
+            <strong>💡 Linear utility makes the Pareto set a specific line, not a band.</strong> Because MRS$^A$ is always exactly 1 (never changes with quantities), the contract curve is pinned wherever MRS$^B = 1$, which is exactly the diagonal $x_B = y_B$.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </details>
+
+    <div class="self-test">
+      <h4>🎯 Try it — Pareto improvements over the endowment</h4>
+      <p style="font-size:.88rem;margin:0 0 10px;">
+        Using the same economy ($u_A = x_A + y_A$, $\omega_A = (4,2)$, $u_B = x_By_B$, $\omega_B = (2,4)$): which allocations on the contract curve ($y_A = x_A$) are Pareto improvements over $E$? Solve explicitly.
+      </p>
+      <details><summary>Show answer</summary>
+      <div class="ans-body">
+        At endowment: $u_A(E) = 4+2 = 6$, $u_B(E) = 2 \times 4 = 8$.<br>
+        On contract curve: $x_A \in [0,6]$, $y_A = x_A$, so $u_A = 2x_A$.<br>
+        $x_B = 6 - x_A$, $y_B = 6 - x_A$, so $u_B = (6-x_A)^2$.<br><br>
+        Pareto improvement: $2x_A \geq 6$ AND $(6-x_A)^2 \geq 8$ with at least one strict.<br>
+        $2x_A \geq 6 \Rightarrow x_A \geq 3$.<br>
+        $(6-x_A)^2 \geq 8 \Rightarrow 6 - x_A \geq 2\sqrt{2} \Rightarrow x_A \leq 6 - 2\sqrt{2} \approx 3.17$.<br><br>
+        Pareto improvements on the contract curve: $x_A \in [3,\ 6 - 2\sqrt{2}]$, $y_A = x_A$.
+        This is a small segment of the diagonal — only a narrow band of trades are mutually beneficial starting from this endowment.
+      </div>
+      </details>
+    </div>
+
+  </div>
+</div><!-- /ws-card P3 -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODULE 5 — CV DRILL
+     ═══════════════════════════════════════════════════════════ -->
+<div class="ws-card" id="cv">
+  <div class="ws-card-header">
+    <h2>⑤ Compensating Variation — Three Methods</h2>
+    <span class="pts">Core Welfare Concept</span>
+  </div>
+  <div class="ws-body">
+
+    <div class="exam-quote">
+      <strong>What CV means:</strong> The price of $y$ rises. How much extra money do we need to give the consumer so she's exactly as happy as before? That's the CV.
+    </div>
+
+    <details>
+    <summary>All three methods — when to use each</summary>
+    <div class="solution-body">
+
+      <div class="step-block">
+        <div class="step-num">M1</div>
+        <div class="step-content">
+          <div class="step-name">Method 1: Expenditure function difference</div>
+          <div class="step-why">The cleanest method when you have the expenditure function $e(p_x, p_y, u)$.</div>
+          <div class="step-math">
+            $$CV = e(p_x, p_y^1, u_0) - e(p_x, p_y^0, u_0)$$
+            <em>Cost of achieving old utility $u_0$ at new prices minus cost at old prices.</em><br><br>
+            For the exam problem ($u = x + 4\ln y$, $p_x = 1$):<br>
+            Expenditure function (from Hicksian: $y^h = 4/p_y$): $e(1, p_y, u_0) = u_0 + 4 - 4\ln(4/p_y) = u_0 - 4\ln 4 + 4\ln p_y + 4$<br><br>
+            $CV = e(1, 4, u_0) - e(1, 2, u_0) = [4\ln 4 + 4] - [4\ln 2 + 4] = 4\ln(4/2) = 4\ln 2$
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">M2</div>
+        <div class="step-content">
+          <div class="step-name">Method 2: Area under Hicksian demand</div>
+          <div class="step-why">CV = area between two price levels under the Hicksian (compensated) demand curve for the good whose price changed.</div>
+          <div class="step-math">
+            $$CV = \int_{p_y^0}^{p_y^1} h_y(p_x, p_y, u_0)\, dp_y$$
+            For quasilinear utility: $h_y = y^* = 4/p_y$ (Hicksian = Marshallian — no income effect).<br>
+            $$CV = \int_2^4 \frac{4}{p}\, dp = 4\ln 4 - 4\ln 2 = 4\ln 2$$
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-num">M3</div>
+        <div class="step-content">
+          <div class="step-name">Method 3: Area under Marshallian demand (approximation, exact for quasilinear)</div>
+          <div class="step-why">For quasilinear utility, Hicksian = Marshallian, so area under Marshallian demand is exact. For other utilities, it's only an approximation.</div>
+          <div class="step-math">
+            Same integral, same answer. <strong>Key caveat:</strong> for Cobb-Douglas or other non-quasilinear utilities, this gives an approximation — you'd need the Hicksian demand explicitly (via Shephard's Lemma on the expenditure function) for the exact answer.
+          </div>
+          <div class="insight-box">
+            <strong>💡 When Hicksian = Marshallian:</strong> Only for quasilinear utility (zero income effect). In all other cases, use the expenditure function method for exactness.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </details>
+  </div>
+</div><!-- /ws-card CV -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODULE 6 — PARETO SET DRILL
+     ═══════════════════════════════════════════════════════════ -->
+<div class="ws-card" id="pareto">
+  <div class="ws-card-header">
+    <h2>⑥ First and Second Welfare Theorems — True/False Drill</h2>
+    <span class="pts">Theory Foundation</span>
+  </div>
+  <div class="ws-body">
+
+    <div class="exam-quote">
+      <strong>FWT:</strong> Every Walrasian equilibrium is Pareto efficient.<br>
+      <strong>SWT:</strong> Every Pareto-efficient allocation can be supported as a Walrasian equilibrium — but possibly after redistributing endowments (lump-sum transfers).
+    </div>
+
+    <div class="drill-grid" style="margin-top:16px;">
+
+      <div class="drill-item">
+        <div class="q"><strong>T or F:</strong> "Every Pareto-efficient allocation can be sustained as a Walrasian equilibrium from the <em>original</em> endowment."</div>
+        <details><summary>Show answer</summary>
+        <div class="ans"><strong>FALSE.</strong> This confuses FWT with SWT. The SWT says every Pareto allocation can be a Walrasian equilibrium, but it may require <em>redistributing</em> the endowment first. From a fixed endowment, there is typically only one Walrasian equilibrium — not all Pareto-efficient points.</div></details>
+      </div>
+
+      <div class="drill-item">
+        <div class="q"><strong>T or F:</strong> "The Walrasian equilibrium in the Edgeworth box is always on the contract curve."</div>
+        <details><summary>Show answer</summary>
+        <div class="ans"><strong>TRUE.</strong> By the FWT, every Walrasian equilibrium is Pareto efficient. The contract curve is the set of Pareto-efficient interior allocations. So the Walrasian equilibrium allocation is on the contract curve (assuming it's interior).</div></details>
+      </div>
+
+      <div class="drill-item">
+        <div class="q"><strong>T or F:</strong> "If MRS$^A \neq $ MRS$^B$ at an allocation, that allocation is Pareto inefficient."</div>
+        <details><summary>Show answer</summary>
+        <div class="ans"><strong>TRUE (for interior allocations).</strong> If MRS$^A \neq$ MRS$^B$, there's a mutually beneficial trade — a reallocation that makes at least one person better off without hurting the other. Hence the allocation is not Pareto efficient. (At boundary/corner allocations, we need to check more carefully.)</div></details>
+      </div>
+
+      <div class="drill-item">
+        <div class="q"><strong>T or F:</strong> "The Pareto set and the contract curve are the same thing."</div>
+        <details><summary>Show answer</summary>
+        <div class="ans"><strong>APPROXIMATELY TRUE but imprecise.</strong> The contract curve is typically the interior portion of the Pareto set (where MRS$^A$ = MRS$^B$ at interior points). The full Pareto set may also include boundary allocations. In practice at the 101A level, contract curve ≈ Pareto set of interior allocations.</div></details>
+      </div>
+
+    </div>
+
+  </div>
+</div><!-- /ws-card Pareto -->
+
+</div><!-- /ws-main -->
+</div><!-- /layout-wrapper -->
+
+<script>
+// Active nav highlighting
+document.addEventListener('DOMContentLoaded', () => {
+  const navLinks = document.querySelectorAll('.ws-nav a[href^="#"]');
+  const sections = Array.from(navLinks).map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  window.addEventListener('scroll', () => {
+    let active = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 140) active = '#' + s.id; });
+    navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === active); });
+  }, { passive: true });
+});
+</script>
+</body>
+</html>
