@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Worked Problems — Econ 101A</title>
+
+<!-- MathJax 3 -->
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$'],['\\(','\\)']],
+    displayMath: [['$$','$$'],['\\[','\\]']],
+    tags: 'ams'
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+<style>
+/* ── Design tokens (matches index.html) ─────────────────── */
+:root {
+  --bblue:   #003262;
+  --bgold:   #FDB515;
+  --bgoldd:  #C4820A;
+  --t1:      #1e64b4;
+  --t1bg:    #eef4fc;
+  --t3:      #007840;
+  --t3bg:    #e8f5ee;
+  --alert:   #b41e1e;
+  --alertbg: #fdf0f0;
+  --sidebar: 260px;
+  --r:       8px;
+  --shadow:  0 2px 10px rgba(0,0,0,.10);
+}
+
+*,*::before,*::after { box-sizing: border-box; margin:0; padding:0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #1a1a1a;
+  background: #f2f1ee;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar);
+  height: 100vh;
+  background: #0a1628;
+  color: #c8d8f0;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 24px;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.logo-icon {
+  width: 40px; height: 40px;
+  background: var(--bgold);
+  color: var(--bblue);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 900;
+  flex-shrink: 0;
+}
+
+.logo-title { font-size: 14px; font-weight: 700; color: #fff; font-family: system-ui, sans-serif; }
+.logo-sub   { font-size: 11px; color: #8ba8d0; font-family: system-ui, sans-serif; }
+
+.sidebar nav { flex: 1; padding: 12px 0; }
+
+.nav-group { margin-bottom: 8px; }
+.nav-group-label {
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #5a7599;
+  padding: 6px 16px 2px;
+  font-family: system-ui, sans-serif;
+}
+.sidebar nav a {
+  display: block;
+  padding: 5px 16px;
+  color: #a8c0e0;
+  text-decoration: none;
+  font-size: 12.5px;
+  font-family: system-ui, sans-serif;
+  border-left: 3px solid transparent;
+  transition: all .15s;
+}
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  color: var(--bgold);
+  border-left-color: var(--bgold);
+  background: rgba(253,181,21,.06);
+}
+.sidebar nav a.back-link {
+  color: #8ba8d0;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.sidebar nav a.back-link:hover { color: var(--bgold); }
+
+.sidebar-footer {
+  padding: 12px 16px 0;
+  border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 11px;
+  color: #5a7599;
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── Hero mini ───────────────────────────────────────────── */
+.hero-mini {
+  margin-left: var(--sidebar);
+  height: 120px;
+  background: linear-gradient(135deg, #001a3d 0%, #002855 60%, #003c7a 100%);
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  gap: 20px;
+}
+.hero-mini-text h1 {
+  font-size: 26px;
+  color: #fff;
+  font-family: Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -.3px;
+}
+.hero-mini-text p {
+  color: var(--bgold);
+  font-size: 13px;
+  font-family: system-ui, sans-serif;
+  margin-top: 2px;
+}
+.hero-mini-badge {
+  background: var(--bgold);
+  color: var(--bblue);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: system-ui, sans-serif;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  align-self: flex-start;
+  margin-top: 28px;
+}
+
+/* ── Main content ────────────────────────────────────────── */
+.main {
+  margin-left: var(--sidebar);
+  background: #f9f8f4;
+  min-height: 100vh;
+  padding: 32px 40px 80px;
+}
+
+/* ── Progress bar ────────────────────────────────────────── */
+.progress-bar {
+  background: #fff;
+  border: 1px solid #e0ddd5;
+  border-radius: var(--r);
+  padding: 12px 20px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #555;
+  box-shadow: var(--shadow);
+}
+.progress-bar .pip { color: var(--bgold); font-size: 16px; }
+.progress-bar strong { color: var(--bblue); }
+
+/* ── Problem card ────────────────────────────────────────── */
+.problem-card {
+  background: #fff;
+  border: 1px solid #e0ddd5;
+  border-radius: 12px;
+  margin-bottom: 36px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.problem-header {
+  background: var(--bblue);
+  color: #fff;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.problem-number {
+  font-size: 20px;
+  font-weight: 900;
+  font-family: system-ui, sans-serif;
+  color: var(--bgold);
+  min-width: 32px;
+}
+.problem-title {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: system-ui, sans-serif;
+  flex: 1;
+}
+.point-badge {
+  background: rgba(253,181,21,.2);
+  color: var(--bgold);
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(253,181,21,.4);
+}
+.type-badge {
+  background: var(--bgold);
+  color: var(--bblue);
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.problem-body { padding: 24px; }
+
+/* ── Exam quote ──────────────────────────────────────────── */
+.exam-quote {
+  border-left: 4px solid var(--bgold);
+  background: #fffdf5;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  border-radius: 0 var(--r) var(--r) 0;
+  font-style: italic;
+  color: #333;
+  font-size: 14.5px;
+}
+.exam-quote p { margin-bottom: 6px; }
+.exam-quote p:last-child { margin-bottom: 0; }
+.exam-quote .part-label {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--bblue);
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  margin-top: 10px;
+  display: block;
+}
+
+/* ── Brain hook ──────────────────────────────────────────── */
+.brain-hook {
+  background: #f0f5ff;
+  border: 1px solid #c3d4f0;
+  border-radius: var(--r);
+  padding: 10px 16px;
+  font-size: 13.5px;
+  color: #234;
+  margin-bottom: 14px;
+  font-family: system-ui, sans-serif;
+}
+.brain-hook::before { content: "🧠 "; }
+
+/* ── Solution details ────────────────────────────────────── */
+details { margin-top: 4px; }
+details summary {
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bblue);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  list-style: none;
+  transition: background .15s;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary:hover { background: #004a9a; }
+details[open] summary { background: #004a9a; }
+details summary::after { content: " ▸"; font-size: 11px; }
+details[open] summary::after { content: " ▾"; }
+
+.solution-body { padding-top: 20px; }
+
+/* ── Solve step ──────────────────────────────────────────── */
+.solve-step {
+  border-left: 3px solid #c8d8f0;
+  padding: 12px 16px 12px 18px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.solve-step:hover { border-left-color: var(--t1); }
+
+.step-label {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--t1);
+  margin-bottom: 2px;
+}
+.step-name {
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--bblue);
+  margin-bottom: 4px;
+}
+.step-why {
+  font-style: italic;
+  color: #667;
+  font-size: 13px;
+  margin-bottom: 8px;
+  font-family: system-ui, sans-serif;
+}
+.step-math { margin-top: 6px; }
+
+/* ── Callout boxes ───────────────────────────────────────── */
+.trap-box {
+  background: var(--alertbg);
+  border: 1px solid #e8c0c0;
+  border-left: 4px solid var(--alert);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #7a1010;
+  margin: 10px 0;
+}
+.trap-box strong { color: var(--alert); }
+
+.insight-box {
+  background: #fffbe6;
+  border: 1px solid #f0d060;
+  border-left: 4px solid var(--bgold);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #5a3e00;
+  margin: 14px 0;
+}
+.insight-box strong { color: #7a5500; }
+
+.self-test {
+  background: var(--t3bg);
+  border: 1px solid #a8d8bc;
+  border-left: 4px solid var(--t3);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #1a4a30;
+}
+.self-test strong { color: var(--t3); }
+.self-test details { margin-top: 8px; }
+.self-test details summary {
+  background: var(--t3);
+  font-size: 12px;
+  padding: 5px 12px;
+}
+.self-test details summary:hover { background: #005a30; }
+.self-test-answer {
+  background: #fff;
+  border: 1px solid #c0dcc8;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #1a3a24;
+}
+
+/* ── Part heading inside solution ────────────────────────── */
+.part-heading {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--bblue);
+  background: #eef4fc;
+  border-left: 3px solid var(--t1);
+  padding: 6px 12px;
+  margin: 18px 0 10px;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ── Problem nav links ───────────────────────────────────── */
+.prob-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  font-family: system-ui, sans-serif;
+}
+.prob-nav a {
+  padding: 5px 12px;
+  background: #fff;
+  border: 1px solid #d0ccc2;
+  border-radius: 20px;
+  text-decoration: none;
+  color: var(--bblue);
+  font-size: 12px;
+  font-weight: 600;
+  transition: all .15s;
+}
+.prob-nav a:hover {
+  background: var(--bgold);
+  border-color: var(--bgold);
+  color: var(--bblue);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .hero-mini, .main { margin-left: 0; }
+  .main { padding: 20px 16px 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     SIDEBAR
+     ══════════════════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">∂</div>
+    <div>
+      <div class="logo-title">Econ 101A</div>
+      <div class="logo-sub">Vedant · Spring 2026</div>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <div class="nav-group-label">Navigation</div>
+      <a href="index.html" class="back-link">← Main Guide</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Problems on This Page</div>
+      <a href="#p1">1. Vegetables &amp; Salt</a>
+      <a href="#p2">2. Veblen Good</a>
+      <a href="#p3">3. Omar (2-Period)</a>
+      <a href="#p4">4. Slutsky Decomp.</a>
+      <a href="#p5">5. Walrasian GE</a>
+      <a href="#p6">6. CARA Risk</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Topics Covered</div>
+      <a href="#p1">Preferences &amp; ICs</a>
+      <a href="#p2">Quasilinear Demand</a>
+      <a href="#p3">Intertemporal + Envelope</a>
+      <a href="#p4">SE / IE Decomp.</a>
+      <a href="#p5">GE &amp; First WT</a>
+      <a href="#p6">Expected Utility</a>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    Prof. Gaubert · MT2 + Finals<br/>
+    All problems fully worked.<br/>
+    MathJax active.
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════════════════════
+     HERO MINI
+     ══════════════════════════════════════════════════════════ -->
+<div class="hero-mini">
+  <div class="hero-mini-text">
+    <h1>Worked Exam Problems</h1>
+    <p>UC Berkeley · Econ 101A · Prof. Gaubert · Spring 2026</p>
+  </div>
+  <div class="hero-mini-badge">Midterm 2 + Final</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MAIN
+     ══════════════════════════════════════════════════════════ -->
+<main class="main">
+
+<!-- Progress tracker -->
+<div class="progress-bar">
+  <span class="pip">●</span>
+  <span><strong>6 problems</strong> · click "Show Full Solution" to reveal · MathJax active · answers hidden in self-test sections</span>
+</div>
+
+<!-- Quick jump nav -->
+<div class="prob-nav">
+  <a href="#p1">P1: Vegetables &amp; Salt</a>
+  <a href="#p2">P2: Veblen Good</a>
+  <a href="#p3">P3: Omar</a>
+  <a href="#p4">P4: Slutsky</a>
+  <a href="#p5">P5: Walrasian GE</a>
+  <a href="#p6">P6: CARA Risk</a>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PROBLEM 1 — Vegetables & Salt
+     ══════════════════════════════════════════════════════════ -->
+<div class="problem-card" id="p1">
+  <div class="problem-header">
+    <div class="problem-number">1</div>
+    <div class="problem-title">Vegetables &amp; Salt — Non-Standard Preferences</div>
+    <div class="type-badge">Preference Axioms + IC Drawing</div>
+    <div class="point-badge">MT2 · Problem 1</div>
+  </div>
+  <div class="problem-body">
+
+    <div class="exam-quote">
+      <p>A consumer has two goods: vegetables $v \geq 0$ and salt $s \geq 0$. Preferences satisfy:</p>
+      <p>(i) More vegetables is always strictly preferred.</p>
+      <p>(ii) Salt alone has no value.</p>
+      <p>(iii) When $s &lt; v$, increasing salt (holding $v$ fixed) is strictly preferred.</p>
+      <p>(iv) When $s \geq v$, additional salt does not change the ranking of the bundle.</p>
+      <span class="part-label">(a)</span>
+      <p>Write properties (ii) and (iv) formally using $\succ, \succeq, \sim$.</p>
+      <span class="part-label">(b)</span>
+      <p>Draw indifference curves in $(v,s)$ space. Label axes and the line $s=v$. Indicate the higher-utility direction. Explain key features.</p>
+    </div>
+
+    <div class="brain-hook">
+      Think of seasoning food: salt makes vegetables tastier — but only up to a point. Once you've hit the right seasoning level ($s = v$), adding more salt doesn't help. And a bowl of pure salt is worthless.
+    </div>
+
+    <details>
+      <summary>Show Full Solution</summary>
+      <div class="solution-body">
+
+        <div class="part-heading">Part (a) — Formal Statements</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 1</div>
+          <div class="step-name">Formalize Property (ii): Salt alone has no value</div>
+          <div class="step-why">We need to say that any bundle with $v = 0$ is equivalent to the zero bundle, regardless of how much salt is present.</div>
+          <div class="step-math">
+            $$\forall\, s \geq 0:\quad (0,\, s) \sim (0,\, 0)$$
+            <p style="font-size:13px;font-family:system-ui;color:#444;margin-top:6px;">Salt, on its own, provides zero utility — the consumer is indifferent between any $(0, s)$ bundle and having nothing.</p>
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 2</div>
+          <div class="step-name">Formalize Property (iv): Salt is neutral once $s \geq v$</div>
+          <div class="step-why">Once salt exceeds vegetables, more salt adds no utility — we need $\sim$ (indifference) to hold for any increment $\delta > 0$.</div>
+          <div class="step-math">
+            $$\forall\, v \geq 0,\;\forall\, s \geq v,\;\forall\, \delta > 0:\quad (v,\, s + \delta) \sim (v,\, s)$$
+            <p style="font-size:13px;font-family:system-ui;color:#444;margin-top:6px;">Once you're on or above the diagonal $s = v$, additional salt is completely neutral.</p>
+          </div>
+          <div class="trap-box">
+            <strong>⚠️ TRAP:</strong> Don't write $\succ$ here. The statement says "does not change the ranking," which means indifference ($\sim$), not strict preference. Using $\succeq$ is also technically imprecise — it allows for strict preference, which contradicts the statement.
+          </div>
+        </div>
+
+        <div class="part-heading">Part (b) — Indifference Curves</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 3</div>
+          <div class="step-name">Find a Utility Representation</div>
+          <div class="step-why">A concrete utility function helps us figure out the shape of indifference curves. We just need one that satisfies all four properties.</div>
+          <div class="step-math">
+            <p style="font-size:13.5px;font-family:system-ui;margin-bottom:8px;">The function $u(v, s) = v + \min(v,\, s)$ works. Check:</p>
+            <ul style="font-family:system-ui;font-size:13px;padding-left:20px;color:#333;margin-bottom:8px;">
+              <li>(i) More $v$ increases $u$: if $v' > v$, then $u(v',s) = v' + \min(v',s) > v + \min(v,s)$ ✓</li>
+              <li>(ii) $u(0, s) = 0 + \min(0,s) = 0$ for all $s \geq 0$ ✓</li>
+              <li>(iii) When $s &lt; v$: $u(v,s) = v + s$, which strictly increases in $s$ ✓</li>
+              <li>(iv) When $s \geq v$: $u(v,s) = v + v = 2v$, constant in $s$ ✓</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 4</div>
+          <div class="step-name">Derive IC Shape in Each Region</div>
+          <div class="step-why">The $s = v$ diagonal splits the space into two regions with different IC shapes. Work each out separately.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:6px;"><strong>Region A — Below diagonal ($s &lt; v$):</strong></p>
+            $$u(v,s) = v + s = k \implies s = k - v$$
+            <p style="font-family:system-ui;font-size:13px;color:#444;margin-bottom:10px;">ICs are straight lines with slope $-1$.</p>
+
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:6px;"><strong>Region B — On/above diagonal ($s \geq v$):</strong></p>
+            $$u(v,s) = 2v = k \implies v = k/2$$
+            <p style="font-family:system-ui;font-size:13px;color:#444;margin-bottom:10px;">ICs are vertical lines at $v = k/2$ — $s$ doesn't matter here.</p>
+
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:4px;"><strong>Putting it together:</strong> Each IC is an L-shape. The "corner" (kink) falls exactly on the diagonal $s = v$. Below the diagonal, the IC slopes at $-1$ (you trade vegetables and salt 1-for-1). Above the diagonal, the IC is vertical (changing salt doesn't matter).</p>
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 5</div>
+          <div class="step-name">Key Features of the Diagram</div>
+          <div class="step-why">The exam expects you to state — not just draw — the economically meaningful features.</div>
+          <div class="step-math">
+            <ul style="font-family:system-ui;font-size:13px;padding-left:20px;color:#333;">
+              <li><strong>Axes:</strong> $v$ (vegetables) on horizontal, $s$ (salt) on vertical.</li>
+              <li><strong>Diagonal:</strong> Draw the line $s = v$. This is where all kinks occur.</li>
+              <li><strong>IC shape:</strong> L-shaped, kink on diagonal. Right-angle corner points toward the origin from the kink.</li>
+              <li><strong>Higher utility:</strong> Moving <em>rightward</em> (more $v$) reaches higher ICs. Moving upward above the diagonal leaves utility unchanged.</li>
+              <li><strong>Satiation:</strong> Salt is partially satiated — fully satiated once $s \geq v$, but never globally satiated (more $v$ always helps).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="insight-box">
+          💡 <strong>Key Insight:</strong> The kink on $s = v$ is not a corner solution — it's a structural feature of the preferences. This good (salt) is a <em>weak complement</em> to vegetables: it helps up to a point, then becomes irrelevant. The IC shape encodes exactly that: slope $-1$ (both matter) below the diagonal, vertical (only $v$ matters) above it.
+        </div>
+
+        <div class="self-test">
+          <strong>🎯 Self-Test:</strong> Suppose preferences changed so that salt always provides some value, even when $s \geq v$, but with diminishing marginal value. Sketch qualitatively how the ICs would change. Would the kink disappear or soften?
+          <details>
+            <summary>Show Answer</summary>
+            <div class="self-test-answer">
+              If salt always provides some value, the vertical segment of the IC above the diagonal would become downward sloping (not vertical) — you'd still need to give up some vegetables to compensate for losing salt, even when $s \geq v$. The kink at $s = v$ would soften into a smooth curve rather than a right angle. The ICs would look more like standard convex ICs, losing the perfect-substitutes-then-satiation structure.
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PROBLEM 2 — Veblen Good
+     ══════════════════════════════════════════════════════════ -->
+<div class="problem-card" id="p2">
+  <div class="problem-header">
+    <div class="problem-number">2</div>
+    <div class="problem-title">Veblen Good — Price in the Utility Function</div>
+    <div class="type-badge">Quasilinear Demand + Veblen vs. Giffen</div>
+    <div class="point-badge">MT2 · Problem 2</div>
+  </div>
+  <div class="problem-body">
+
+    <div class="exam-quote">
+      <p>A consumer chooses visible good $x \geq 0$ and numeraire $y \geq 0$. Income $m > 0$, price of $x$ is $p > 0$, budget: $px + y = m$.</p>
+      <p>Preferences: $U(x,y;p) = a\ln x + y + bx\ln p,\quad a > 0,\, b \geq 0.$</p>
+      <p>Assume $p - b\ln p > 0$ and $m$ large enough for an interior solution.</p>
+      <span class="part-label">(a)</span>
+      <p>Derive the Marshallian demand for $x$.</p>
+      <span class="part-label">(b)</span>
+      <p>Is demand necessarily downward-sloping? For which $p$ does demand increase with price? Decrease?</p>
+      <span class="part-label">(c)</span>
+      <p>What does $bx\ln p$ capture economically? Give an example.</p>
+      <span class="part-label">(d)</span>
+      <p>A student claims upward-sloping demand here means $x$ is a Giffen good. Do you agree? Explain.</p>
+    </div>
+
+    <div class="brain-hook">
+      A Louis Vuitton bag is more desirable precisely because it's expensive — owning one signals status. This problem formalizes that instinct: the utility of the good depends on its price.
+    </div>
+
+    <details>
+      <summary>Show Full Solution</summary>
+      <div class="solution-body">
+
+        <div class="part-heading">Part (a) — Marshallian Demand</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 1</div>
+          <div class="step-name">Recognize Quasilinear Structure, Substitute Budget</div>
+          <div class="step-why">The utility is linear in $y$. This means we can substitute the budget constraint directly and maximize over $x$ alone — no income effect on $x$.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13px;margin-bottom:6px;">From the budget constraint: $y = m - px$. Substitute:</p>
+            $$U = a\ln x + (m - px) + bx\ln p$$
+            $$U = a\ln x - px + bx\ln p + m$$
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 2</div>
+          <div class="step-name">Maximize Over $x$ — Take FOC</div>
+          <div class="step-why">Differentiate with respect to $x$ and set equal to zero. This is a single-variable unconstrained problem after substitution.</div>
+          <div class="step-math">
+            $$\frac{\partial U}{\partial x} = \frac{a}{x} - p + b\ln p = 0$$
+            $$\implies \frac{a}{x} = p - b\ln p$$
+            $$\boxed{x^*(p) = \frac{a}{p - b\ln p}}$$
+            <p style="font-family:system-ui;font-size:13px;color:#444;margin-top:6px;">Note: $x^*$ does not depend on $m$. This is the hallmark of quasilinear utility — the demand for $x$ has no income effect.</p>
+          </div>
+          <div class="trap-box">
+            <strong>⚠️ TRAP:</strong> Don't set up a full Lagrangian and solve for $\lambda$. The quasilinear structure makes direct substitution faster and cleaner. If you use a Lagrangian, you'll get the same FOC, but you risk confusing yourself.
+          </div>
+        </div>
+
+        <div class="part-heading">Part (b) — Slope of Demand</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 3</div>
+          <div class="step-name">Differentiate $x^*$ with Respect to $p$</div>
+          <div class="step-why">To determine whether demand slopes up or down, compute $\partial x^* / \partial p$ and check its sign.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13px;margin-bottom:6px;">Let $D(p) = p - b\ln p$. Then $x^* = a/D(p)$, so:</p>
+            $$\frac{\partial x^*}{\partial p} = \frac{-a \cdot D'(p)}{[D(p)]^2}$$
+            $$D'(p) = 1 - \frac{b}{p}$$
+            $$\therefore\quad \frac{\partial x^*}{\partial p} = \frac{-a\left(1 - \frac{b}{p}\right)}{(p - b\ln p)^2}$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:10px;font-family:system-ui;"><strong>Sign analysis:</strong> The denominator is always positive (given $p - b\ln p > 0$). The sign of $\partial x^*/\partial p$ is thus determined by $-(1 - b/p)$:</p>
+            <ul style="font-family:system-ui;font-size:13px;padding-left:20px;color:#333;margin-top:6px;">
+              <li>If $p > b$: $D'(p) > 0$, so $\partial x^*/\partial p < 0$ — demand is <strong>downward-sloping</strong> (normal).</li>
+              <li>If $p &lt; b$: $D'(p) &lt; 0$, so $\partial x^*/\partial p > 0$ — demand is <strong>upward-sloping</strong> (Veblen region).</li>
+              <li>If $p = b$: demand is at its maximum ($x^*$ is locally flat in $p$).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (c) — Economic Meaning of $bx\ln p$</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 4</div>
+          <div class="step-name">Interpret the Status Term</div>
+          <div class="step-why">This term captures how the price of a good affects its intrinsic appeal — the "Veblen effect."</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;">The term $bx\ln p$ says: consuming $x$ units of a good priced at $p$ gives extra utility $bx\ln p$. Since $\ln p$ increases in $p$, a higher price makes each unit of $x$ more desirable. This is the <strong>Veblen/status effect</strong>: the good provides social signaling value precisely because it is expensive.</p>
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:8px;"><strong>Example:</strong> Designer handbags (Birkin, Chanel), limited-edition sneakers, luxury champagne (Dom Pérignon), high-end watches (Rolex). Owning these goods at high prices is the point — they are consumed partly for the signal, not just the substance.</p>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (d) — Veblen ≠ Giffen</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 5</div>
+          <div class="step-name">Distinguish Veblen from Giffen</div>
+          <div class="step-why">This is a classic conceptual trap. The mechanisms are completely different even though both produce upward-sloping demand.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:8px;"><strong>Disagree with the student.</strong> Here is the distinction:</p>
+            <table style="width:100%;border-collapse:collapse;font-family:system-ui;font-size:13px;margin-bottom:8px;">
+              <thead><tr style="background:#eef4fc;">
+                <th style="border:1px solid #c3d4f0;padding:6px 10px;text-align:left;">Feature</th>
+                <th style="border:1px solid #c3d4f0;padding:6px 10px;text-align:left;">Giffen Good</th>
+                <th style="border:1px solid #c3d4f0;padding:6px 10px;text-align:left;">Veblen Good (this problem)</th>
+              </tr></thead>
+              <tbody>
+                <tr><td style="border:1px solid #e0e8f4;padding:6px 10px;">Source of upward slope</td><td style="border:1px solid #e0e8f4;padding:6px 10px;">Large negative income effect dominates substitution effect</td><td style="border:1px solid #e0e8f4;padding:6px 10px;">Price appears directly in utility (status effect)</td></tr>
+                <tr style="background:#fafcff;"><td style="border:1px solid #e0e8f4;padding:6px 10px;">Income effect on $x$?</td><td style="border:1px solid #e0e8f4;padding:6px 10px;">Yes, large and negative (inferior good)</td><td style="border:1px solid #e0e8f4;padding:6px 10px;">Zero (quasilinear utility)</td></tr>
+                <tr><td style="border:1px solid #e0e8f4;padding:6px 10px;">Good type</td><td style="border:1px solid #e0e8f4;padding:6px 10px;">Inferior good (budget staple)</td><td style="border:1px solid #e0e8f4;padding:6px 10px;">Need not be inferior — luxury good</td></tr>
+                <tr style="background:#fafcff;"><td style="border:1px solid #e0e8f4;padding:6px 10px;">Slutsky SE direction</td><td style="border:1px solid #e0e8f4;padding:6px 10px;">Negative (as always)</td><td style="border:1px solid #e0e8f4;padding:6px 10px;">N/A — price is in preferences</td></tr>
+              </tbody>
+            </table>
+            <p style="font-family:system-ui;font-size:13.5px;">In this model, $x^*$ does not depend on $m$ at all. There is zero income effect. The upward slope comes entirely from the direct utility effect of price — not from income-compensated behavior. A Giffen good requires a <em>negative income effect large enough to overwhelm the substitution effect</em>. That mechanism is simply absent here.</p>
+          </div>
+          <div class="trap-box">
+            <strong>⚠️ TRAP:</strong> Some students say "the demand curve slopes up, so it must be Giffen." Wrong. Giffen and Veblen are two separate reasons for upward-sloping demand with completely different economic origins. Only Giffen requires the Slutsky income effect to dominate.
+          </div>
+        </div>
+
+        <div class="insight-box">
+          💡 <strong>Key Insight:</strong> Quasilinear preferences kill the income effect. When utility is linear in $y$, the optimal $x$ is pinned entirely by the FOC and doesn't shift with income. Any upward slope in the demand for $x$ must come from the price's direct appearance in utility — that's the Veblen mechanism, not Giffen.
+        </div>
+
+        <div class="self-test">
+          <strong>🎯 Self-Test:</strong> Suppose $b = 0$ (no status effect). Write down $x^*(p)$ and verify the demand is strictly downward sloping. Now suppose $a = 2$, $b = 4$. At what price $p^*$ is demand maximized?
+          <details>
+            <summary>Show Answer</summary>
+            <div class="self-test-answer">
+              <p><strong>When $b = 0$:</strong> $x^* = a/p$. Then $\partial x^*/\partial p = -a/p^2 &lt; 0$ — strictly downward sloping (standard log demand).</p>
+              <p style="margin-top:8px;"><strong>When $a=2, b=4$:</strong> Demand is maximized where $\partial x^*/\partial p = 0$, which requires $D'(p) = 1 - b/p = 0 \implies p^* = b = 4$. So demand is maximized at price $p = 4$. At prices below 4, demand rises with price (Veblen region); above 4, demand falls normally.</p>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PROBLEM 3 — Omar Two-Period Choice
+     ══════════════════════════════════════════════════════════ -->
+<div class="problem-card" id="p3">
+  <div class="problem-header">
+    <div class="problem-number">3</div>
+    <div class="problem-title">Omar — Two-Period Labor &amp; Consumption</div>
+    <div class="type-badge">Lagrangian + Euler Equation + Envelope Theorem</div>
+    <div class="point-badge">MT2 · Problem 3</div>
+  </div>
+  <div class="problem-body">
+
+    <div class="exam-quote">
+      <p>Omar lives for two periods $t = 0, 1$. Each period: consumption $c_t \geq 0$, labor $\ell_t \geq 0$, wages $w_t > 0$. Can borrow/save at gross rate $R > 1$. No initial wealth.</p>
+      $$U = \ln c_0 - \frac{\ell_0^2}{2} + \beta\!\left(\ln c_1 - \frac{\ell_1^2}{2}\right), \quad \beta \in (0,1)$$
+      <p>Intertemporal budget: $c_0 + \dfrac{c_1}{R} = w_0\ell_0 + \dfrac{w_1\ell_1}{R}$</p>
+      <span class="part-label">(a)</span>
+      <p>What does $\ell_t^2/2$ capture? What does $\beta$ represent?</p>
+      <span class="part-label">(b)(i)</span>
+      <p>Write the Lagrangian, derive FOCs, and find the consumption Euler equation. When does consumption grow?</p>
+      <span class="part-label">(b)(ii)</span>
+      <p>Derive the labor FOCs. Interpret (marginal benefit vs. marginal cost).</p>
+      <span class="part-label">(c)</span>
+      <p>Let $V(w_0, w_1, R)$ denote the indirect utility function. Use the Envelope Theorem to find $dV/dw_0$. Interpret.</p>
+      <span class="part-label">(d)</span>
+      <p>Without solving fully: does $c_0^*$ increase or decrease when $\beta$ increases? Give intuition.</p>
+    </div>
+
+    <div class="brain-hook">
+      Imagine a freelancer deciding how hard to work today vs. next year, and how much to save for the future. Every extra hour of work is more painful than the last (convex disutility), and future consumption is discounted because you'd rather enjoy things now.
+    </div>
+
+    <details>
+      <summary>Show Full Solution</summary>
+      <div class="solution-body">
+
+        <div class="part-heading">Part (a) — Interpretation of $\ell_t^2/2$ and $\beta$</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 1</div>
+          <div class="step-name">Interpret the Disutility and Discount Factor</div>
+          <div class="step-why">Before touching math, you should understand what the model is saying in plain English. Graders reward this.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:6px;"><strong>$\ell_t^2/2$ (disutility of labor):</strong> This is a convex cost of working. The marginal disutility of the $\ell$-th hour of work is $\ell$ itself. Each additional hour of work is more painful than the last — the $10$th hour hurts more than the $1$st. This is the standard "increasing marginal disutility" assumption.</p>
+            <p style="font-family:system-ui;font-size:13.5px;"><strong>$\beta \in (0,1)$ (discount factor):</strong> Omar values future utility less than present utility. A $\beta$ close to 1 means he is very patient (almost indifferent between now and later); a $\beta$ close to 0 means he heavily discounts the future. Formally, $\beta = 1/(1+\rho)$ where $\rho$ is the subjective rate of time preference.</p>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (b)(i) — Lagrangian and Euler Equation</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 2</div>
+          <div class="step-name">Write the Lagrangian</div>
+          <div class="step-why">We have four choice variables ($c_0, c_1, \ell_0, \ell_1$) and one constraint. Standard Lagrangian setup.</div>
+          <div class="step-math">
+            $$\mathcal{L} = \ln c_0 - \frac{\ell_0^2}{2} + \beta\!\left(\ln c_1 - \frac{\ell_1^2}{2}\right) - \lambda\!\left(c_0 + \frac{c_1}{R} - w_0\ell_0 - \frac{w_1\ell_1}{R}\right)$$
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 3</div>
+          <div class="step-name">Derive FOCs for Consumption</div>
+          <div class="step-why">Differentiate $\mathcal{L}$ with respect to $c_0$ and $c_1$. These give us the consumption optimality conditions.</div>
+          <div class="step-math">
+            $$[c_0]:\quad \frac{1}{c_0} = \lambda \tag{1}$$
+            $$[c_1]:\quad \frac{\beta}{c_1} = \frac{\lambda}{R} \tag{2}$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:8px;"><strong>Euler Equation:</strong> Divide (1) by (2):</p>
+            $$\frac{1/c_0}{\beta/c_1} = \frac{\lambda}{\lambda/R} \implies \frac{c_1}{\beta c_0} = R \implies \boxed{c_1 = \beta R \cdot c_0}$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:8px;"><strong>Consumption grows ($c_1 > c_0$) when $\beta R > 1$</strong>, i.e., when the return on savings outweighs impatience. If $\beta R &lt; 1$, consumption falls over time.</p>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (b)(ii) — Labor FOCs</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 4</div>
+          <div class="step-name">Derive FOCs for Labor Supply</div>
+          <div class="step-why">Differentiate $\mathcal{L}$ with respect to $\ell_0$ and $\ell_1$. These pin down how much Omar works each period.</div>
+          <div class="step-math">
+            $$[\ell_0]:\quad -\ell_0 + \lambda w_0 = 0 \implies \ell_0 = \lambda w_0 \tag{3}$$
+            $$[\ell_1]:\quad -\beta\ell_1 + \frac{\lambda w_1}{R} = 0 \implies \beta\ell_1 = \frac{\lambda w_1}{R} \implies \ell_1 = \frac{\lambda w_1}{\beta R} \tag{4}$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:10px;"><strong>Interpretation:</strong> FOC (3) says: the marginal disutility of working ($\ell_0$) equals the shadow value of the income earned ($\lambda w_0$). Using $\lambda = 1/c_0$ from (1):</p>
+            $$\ell_0 = \frac{w_0}{c_0}, \qquad \ell_1 = \frac{w_1}{c_1}$$
+            <p style="font-family:system-ui;font-size:13px;color:#444;margin-top:6px;">In each period, Omar works until the marginal disutility of labor equals the real wage measured in consumption units.</p>
+          </div>
+          <div class="trap-box">
+            <strong>⚠️ TRAP:</strong> Don't forget to account for the $\beta$ and $1/R$ discounting in the period-1 labor FOC. The $\beta$ discounts future utility, and $1/R$ converts period-1 income into period-0 value. Both appear in the FOC for $\ell_1$.
+          </div>
+        </div>
+
+        <div class="part-heading">Part (c) — Envelope Theorem</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 5</div>
+          <div class="step-name">Apply the Envelope Theorem to $V(w_0, w_1, R)$</div>
+          <div class="step-why">The Envelope Theorem says: at the optimum, $dV/d\theta = \partial\mathcal{L}/\partial\theta |_{\text{optimum}}$. We just differentiate $\mathcal{L}$ directly w.r.t. $w_0$, holding all choice variables at their optimal values.</div>
+          <div class="step-math">
+            $$\frac{dV}{dw_0} = \frac{\partial \mathcal{L}}{\partial w_0}\bigg|_{\text{opt}} = \lambda \cdot \ell_0^*$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:8px;">Using $\lambda^* = 1/c_0^*$:</p>
+            $$\boxed{\frac{dV}{dw_0} = \frac{\ell_0^*}{c_0^*}}$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:8px;"><strong>Interpretation:</strong> A marginal increase in $w_0$ raises lifetime income by $\ell_0^*$ units (the number of hours Omar is working times the wage increase). Each extra unit of income is worth $\lambda^* = 1/c_0^*$ utils. So the total utility gain is $\ell_0^*/c_0^*$. Higher wages are better if you're working — but the benefit scales with how much you're working.</p>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (d) — Comparative Statics: $\beta$ and $c_0^*$</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 6</div>
+          <div class="step-name">Reason Through the Effect of $\beta$ on $c_0^*$</div>
+          <div class="step-why">Formal solution not required — the exam wants economic intuition plus correct direction.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;"><strong>$c_0^*$ decreases when $\beta$ increases.</strong></p>
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:6px;">When $\beta$ rises, Omar places more weight on future utility. The Euler equation $c_1 = \beta R c_0$ shows that a higher $\beta$ increases $c_1$ relative to $c_0$ — Omar wants a steeper consumption profile. Given a fixed lifetime budget, consuming more in period 1 means consuming less in period 0. So $c_0^*$ falls.</p>
+            <p style="font-family:system-ui;font-size:13px;color:#666;margin-top:6px;">Intuition: a more patient consumer saves more today to fund higher future consumption. Patience (high $\beta$) is synonymous with sacrificing present consumption.</p>
+          </div>
+        </div>
+
+        <div class="insight-box">
+          💡 <strong>Key Insight:</strong> The Euler equation $c_1 = \beta R c_0$ is the backbone of intertemporal consumer theory. It encodes the trade-off between patience ($\beta$) and the reward for saving ($R$). When $\beta R = 1$, the consumer perfectly smooths consumption. When $\beta R \neq 1$, the profile tilts — and the tilt direction tells you everything about saving behavior.
+        </div>
+
+        <div class="self-test">
+          <strong>🎯 Self-Test:</strong> Suppose $w_1$ doubles. Using the Envelope Theorem, write the expression for $dV/dw_1$. Then argue intuitively: does Omar work more or less in period 1 when $w_1$ increases?
+          <details>
+            <summary>Show Answer</summary>
+            <div class="self-test-answer">
+              <p><strong>Envelope Theorem:</strong> $\dfrac{dV}{dw_1} = \dfrac{\partial\mathcal{L}}{\partial w_1}\bigg|_{\text{opt}} = \dfrac{\lambda \ell_1^*}{R} = \dfrac{\ell_1^*}{R c_0^*}$.</p>
+              <p style="margin-top:8px;"><strong>Labor in period 1:</strong> A higher $w_1$ raises the return to working in period 1, making leisure more expensive (substitution effect). In this model, there's no "wealth effect" that would reduce labor (since labor here is the only income source). So Omar works more in period 1 — $\ell_1^*$ increases with $w_1$. Formally: $\ell_1^* = w_1/c_1^*$, and a higher $w_1$ — at least partially — feeds back into higher $\ell_1^*$.</p>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PROBLEM 4 — Slutsky Decomposition
+     ══════════════════════════════════════════════════════════ -->
+<div class="problem-card" id="p4">
+  <div class="problem-header">
+    <div class="problem-number">4</div>
+    <div class="problem-title">Slutsky Decomposition — Cobb-Douglas</div>
+    <div class="type-badge">Slutsky SE/IE + Hicksian Demand + Compensated Income</div>
+    <div class="point-badge">Final Style</div>
+  </div>
+  <div class="problem-body">
+
+    <div class="exam-quote">
+      <p>A consumer has utility $u(x,y) = x^{1/2}y^{1/2}$ and income $m = 36$. The price of $y$ is $p_y = 1$ throughout. Initially $p_x = 4$. The price then rises to $p_x' = 9$.</p>
+      <span class="part-label">(a)</span>
+      <p>Find the initial and final Marshallian demands $(x_0^*, y_0^*)$ and $(x_1^*, y_1^*)$.</p>
+      <span class="part-label">(b)</span>
+      <p>Decompose the total effect on $x$ into substitution effect (SE) and income effect (IE) using the Slutsky method. State the compensated income $m'$.</p>
+      <span class="part-label">(c)</span>
+      <p>Is $x$ a normal or inferior good? Explain using the sign of IE.</p>
+    </div>
+
+    <div class="brain-hook">
+      Imagine buying organic produce: when its price jumps from $4 to $9, you buy less. But how much of that is because you switched to something else (substitution), and how much is because you feel poorer (income)? The Slutsky method isolates these two forces.
+    </div>
+
+    <details>
+      <summary>Show Full Solution</summary>
+      <div class="solution-body">
+
+        <div class="part-heading">Part (a) — Initial and Final Marshallian Demands</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 1</div>
+          <div class="step-name">Apply the Cobb-Douglas Demand Formula</div>
+          <div class="step-why">For $u = x^\alpha y^{1-\alpha}$, the Marshallian demands are $x^* = \alpha m/p_x$ and $y^* = (1-\alpha)m/p_y$. With $\alpha = 1/2$: $x^* = m/(2p_x)$ and $y^* = m/(2p_y)$.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:6px;"><strong>Initial ($p_x = 4$):</strong></p>
+            $$x_0^* = \frac{36}{2 \times 4} = \frac{36}{8} = 4.5, \qquad y_0^* = \frac{36}{2 \times 1} = 18$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:10px;margin-bottom:6px;"><strong>Final ($p_x' = 9$):</strong></p>
+            $$x_1^* = \frac{36}{2 \times 9} = \frac{36}{18} = 2, \qquad y_1^* = \frac{36}{2 \times 1} = 18$$
+            <p style="font-family:system-ui;font-size:13px;color:#666;margin-top:8px;">Note: $y^*$ doesn't change because Cobb-Douglas demand for $y$ depends only on $m$ and $p_y$ — both are fixed. This is a useful check.</p>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (b) — Slutsky Decomposition</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 2</div>
+          <div class="step-name">Compute Initial Utility $u_0$</div>
+          <div class="step-why">We need $u_0$ to find the compensated income — the income that keeps utility constant at the new prices.</div>
+          <div class="step-math">
+            $$u_0 = \sqrt{x_0^* \cdot y_0^*} = \sqrt{4.5 \times 18} = \sqrt{81} = 9$$
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 3</div>
+          <div class="step-name">Find the Compensated Income $m'$ (Slutsky Compensation)</div>
+          <div class="step-why">The Slutsky method asks: what income would let the consumer afford the initial bundle at the new prices? This is different from Hicks compensation (which holds utility constant).</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:6px;">The Slutsky compensated income holds the consumer on the same <em>budget set containing the original bundle</em> at new prices:</p>
+            $$m' = p_x' x_0^* + p_y y_0^* = 9 \times 4.5 + 1 \times 18 = 40.5 + 18 = 58.5$$
+            <div class="trap-box">
+              <strong>⚠️ TRAP (Slutsky vs. Hicks):</strong> Slutsky compensation = "can still afford the old bundle at new prices" → $m' = p' \cdot x^*_{\text{old}}$. Hicksian compensation = "maintain the same utility level" → use the expenditure function. This problem uses Slutsky. However, since this is Cobb-Douglas, we can also use Hicksian (expenditure function) to get the exact Hicks SE. The problem says "Slutsky method" — use $m'$ above.
+            </div>
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:10px;">Demand at new price $p_x' = 9$ with compensated income $m' = 58.5$:</p>
+            $$x^H = \frac{m'}{2p_x'} = \frac{58.5}{18} = 3.25$$
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 4</div>
+          <div class="step-name">Compute SE, IE, and Total Effect (TE)</div>
+          <div class="step-why">The Slutsky decomposition says: Total Effect = Substitution Effect + Income Effect.</div>
+          <div class="step-math">
+            $$\text{TE} = x_1^* - x_0^* = 2 - 4.5 = -2.5$$
+            $$\text{SE} = x^H - x_0^* = 3.25 - 4.5 = -1.25$$
+            $$\text{IE} = x_1^* - x^H = 2 - 3.25 = -1.25$$
+            <p style="font-family:system-ui;font-size:13px;color:#444;margin-top:6px;">Verify: $\text{SE} + \text{IE} = -1.25 + (-1.25) = -2.5 = \text{TE}$ ✓</p>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (c) — Normal or Inferior?</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 5</div>
+          <div class="step-name">Classify Using the Sign of the Income Effect</div>
+          <div class="step-why">By definition: IE &lt; 0 for a normal good (a price rise reduces real income, which reduces demand). IE > 0 would indicate an inferior good.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;"><strong>$x$ is a normal good.</strong></p>
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:6px;">The income effect is $-1.25 &lt; 0$. When the price of $x$ rises, real income falls, and the consumer buys less $x$. A normal good is one where demand increases with income — so a fall in real income reduces demand. This is exactly what we see: $\text{IE} &lt; 0$ confirms normality.</p>
+            <p style="font-family:system-ui;font-size:13px;color:#666;margin-top:6px;">Sanity check: Cobb-Douglas goods always have positive income elasticity — they are always normal goods. The Marshallian demand $x^* = m/(2p_x)$ is linear in $m$, so income elasticity equals 1.</p>
+          </div>
+        </div>
+
+        <div class="insight-box">
+          💡 <strong>Key Insight:</strong> The Slutsky decomposition always satisfies: SE ≤ 0 (the substitution effect always works against the price change — this is the negative semi-definiteness of the Slutsky matrix). The income effect can go either way. For normal goods, IE reinforces SE, making the total effect even more negative. For inferior goods, IE partially offsets SE. For Giffen goods, IE &gt; |SE|.
+        </div>
+
+        <div class="self-test">
+          <strong>🎯 Self-Test:</strong> Redo the Slutsky decomposition using the <em>Hicksian</em> (expenditure function) approach instead. For Cobb-Douglas $u = x^{1/2}y^{1/2}$, the expenditure function is $e(p_x, p_y, u) = 2u\sqrt{p_x p_y}$. Compute the Hicksian demand $x^H$ at $p_x' = 9$, $u_0 = 9$. Compare SE and IE to the Slutsky method.
+          <details>
+            <summary>Show Answer</summary>
+            <div class="self-test-answer">
+              <p><strong>Hicksian approach:</strong> $e(p_x', p_y, u_0) = 2 \times 9 \times \sqrt{9 \times 1} = 18 \times 3 = 54$.</p>
+              <p style="margin-top:6px;">Hicksian demand: $x^H = e/(2p_x') = 54/18 = 3$.</p>
+              <p style="margin-top:6px;"><strong>Hicks SE</strong> $= 3 - 4.5 = -1.5$. <strong>Hicks IE</strong> $= 2 - 3 = -1$.</p>
+              <p style="margin-top:6px;"><strong>Comparison:</strong> The Slutsky method gave SE = $-1.25$, IE = $-1.25$. The Hicksian method gives SE = $-1.5$, IE = $-1$. The total effect is the same ($-2.5$), but the decomposition differs. Hicksian compensation (utility-constant) gives a slightly larger substitution effect because it holds utility constant rather than just affording the old bundle.</p>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PROBLEM 5 — Walrasian GE
+     ══════════════════════════════════════════════════════════ -->
+<div class="problem-card" id="p5">
+  <div class="problem-header">
+    <div class="problem-number">5</div>
+    <div class="problem-title">Walrasian General Equilibrium — 2×2 Exchange Economy</div>
+    <div class="type-badge">GE · Walras Law · First Welfare Theorem</div>
+    <div class="point-badge">Final Style</div>
+  </div>
+  <div class="problem-body">
+
+    <div class="exam-quote">
+      <p>Two consumers (A, B) with Cobb-Douglas preferences: $u^A(x,y) = x^{2/3}y^{1/3}$ and $u^B(x,y) = x^{1/3}y^{2/3}$. Endowments: $\omega^A = (6, 0)$ and $\omega^B = (0, 6)$ (A owns only $x$, B owns only $y$).</p>
+      <span class="part-label">(a)</span>
+      <p>Find the Walrasian equilibrium price $p_x^*$ (normalize $p_y = 1$) and equilibrium allocations $(x_A^*, y_A^*)$, $(x_B^*, y_B^*)$.</p>
+      <span class="part-label">(b)</span>
+      <p>Verify market clearing.</p>
+      <span class="part-label">(c)</span>
+      <p>Is the equilibrium allocation Pareto optimal? How do you know?</p>
+    </div>
+
+    <div class="brain-hook">
+      A owns the farm (produces $x$), B owns the factory (produces $y$). Neither has the other's good. Trade is mutually beneficial — GE tells us exactly what prices and quantities make both sides happy simultaneously.
+    </div>
+
+    <details>
+      <summary>Show Full Solution</summary>
+      <div class="solution-body">
+
+        <div class="part-heading">Part (a) — Finding the Equilibrium</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 1</div>
+          <div class="step-name">Compute Incomes from Endowments</div>
+          <div class="step-why">In an exchange economy, each consumer's income comes from selling their endowment at market prices. Set $p_y = 1$ (numeraire).</div>
+          <div class="step-math">
+            $$m_A = p_x \cdot \omega_x^A + p_y \cdot \omega_y^A = 6p_x + 0 = 6p_x$$
+            $$m_B = p_x \cdot \omega_x^B + p_y \cdot \omega_y^B = 0 + 6 = 6$$
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 2</div>
+          <div class="step-name">Write Marshallian Demands Using Cobb-Douglas Formula</div>
+          <div class="step-why">For $u = x^\alpha y^{1-\alpha}$: $x^* = \alpha m/p_x$ and $y^* = (1-\alpha)m/p_y$.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:6px;"><strong>Consumer A</strong> ($\alpha_A = 2/3$):</p>
+            $$x_A^* = \frac{2}{3} \cdot \frac{m_A}{p_x} = \frac{2}{3} \cdot \frac{6p_x}{p_x} = 4, \qquad y_A^* = \frac{1}{3} \cdot m_A = \frac{1}{3} \cdot 6p_x = 2p_x$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:10px;margin-bottom:6px;"><strong>Consumer B</strong> ($\alpha_B = 1/3$):</p>
+            $$x_B^* = \frac{1}{3} \cdot \frac{m_B}{p_x} = \frac{1}{3} \cdot \frac{6}{p_x} = \frac{2}{p_x}, \qquad y_B^* = \frac{2}{3} \cdot m_B = \frac{2}{3} \cdot 6 = 4$$
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 3</div>
+          <div class="step-name">Apply Market Clearing to Find $p_x^*$</div>
+          <div class="step-why">In a Walrasian equilibrium, total demand equals total supply for each good. By Walras' Law, we only need to clear one market.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:6px;"><strong>Market clearing for $x$:</strong> Total endowment of $x$ = 6.</p>
+            $$x_A^* + x_B^* = 6$$
+            $$4 + \frac{2}{p_x} = 6$$
+            $$\frac{2}{p_x} = 2 \implies \boxed{p_x^* = 1}$$
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 4</div>
+          <div class="step-name">Compute Equilibrium Allocations at $p_x^* = 1$</div>
+          <div class="step-why">Substitute $p_x^* = 1$ back into the demand functions.</div>
+          <div class="step-math">
+            $$x_A^* = 4, \qquad y_A^* = 2(1) = 2$$
+            $$x_B^* = \frac{2}{1} = 2, \qquad y_B^* = 4$$
+            <p style="font-family:system-ui;font-size:13px;color:#666;margin-top:6px;">Notice the symmetry: A consumes 4 of $x$ and 2 of $y$ (mostly $x$, matching her preferences), and B consumes 2 of $x$ and 4 of $y$ (mostly $y$). Exactly right given their tastes.</p>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (b) — Verify Market Clearing</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 5</div>
+          <div class="step-name">Check Both Markets Clear</div>
+          <div class="step-why">We cleared the $x$ market by construction. We must verify $y$ also clears (it will, by Walras' Law, but showing it earns full credit).</div>
+          <div class="step-math">
+            $$x_A^* + x_B^* = 4 + 2 = 6 = \omega_x^A + \omega_x^B \checkmark$$
+            $$y_A^* + y_B^* = 2 + 4 = 6 = \omega_y^A + \omega_y^B \checkmark$$
+            <p style="font-family:system-ui;font-size:13px;color:#555;margin-top:6px;">Both markets clear. The equilibrium is valid.</p>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (c) — Pareto Optimality</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 6</div>
+          <div class="step-name">Apply the First Welfare Theorem, Then Verify MRS</div>
+          <div class="step-why">The First Welfare Theorem guarantees that any Walrasian equilibrium of an economy with complete markets is Pareto optimal. We can also verify directly by checking $MRS^A = MRS^B = p_x/p_y$.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:8px;"><strong>First Welfare Theorem:</strong> This is a competitive equilibrium with complete markets and no externalities. By the First Welfare Theorem, it is Pareto optimal.</p>
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:6px;"><strong>Verify directly:</strong> At a Pareto optimum, $MRS^A = MRS^B$. For Cobb-Douglas $u = x^\alpha y^{1-\alpha}$: $MRS = \frac{\alpha}{1-\alpha} \cdot \frac{y}{x}$.</p>
+            $$MRS^A = \frac{2/3}{1/3} \cdot \frac{y_A^*}{x_A^*} = 2 \cdot \frac{2}{4} = 1$$
+            $$MRS^B = \frac{1/3}{2/3} \cdot \frac{y_B^*}{x_B^*} = \frac{1}{2} \cdot \frac{4}{2} = 1$$
+            $$MRS^A = MRS^B = 1 = \frac{p_x^*}{p_y} \checkmark$$
+            <p style="font-family:system-ui;font-size:13px;color:#444;margin-top:8px;">Both consumers are tangent to the same price line, confirming Pareto optimality. There is no room to make one better off without hurting the other.</p>
+          </div>
+          <div class="trap-box">
+            <strong>⚠️ TRAP:</strong> Don't confuse Pareto optimality with Pareto improvement. This equilibrium is Pareto optimal — no Pareto improvement is possible from here. It says nothing about whether the allocation is "fair" (that's a Second Welfare Theorem question about endowment redistribution).
+          </div>
+        </div>
+
+        <div class="insight-box">
+          💡 <strong>Key Insight:</strong> In a $2 \times 2$ exchange economy, the Walrasian equilibrium is found by clearing just one market (Walras' Law cleans up the other). The price normalizes one good's price and you solve for the relative price. Always check your answer with the MRS condition — if $MRS^A = MRS^B = p_x/p_y$, you're confirmed Pareto optimal.
+        </div>
+
+        <div class="self-test">
+          <strong>🎯 Self-Test:</strong> Suppose the endowments change to $\omega^A = (3, 0)$ and $\omega^B = (0, 9)$. Find the new equilibrium price $p_x^*$. Does it go up or down relative to the original? Why does that make intuitive sense?
+          <details>
+            <summary>Show Answer</summary>
+            <div class="self-test-answer">
+              <p><strong>New incomes:</strong> $m_A = 3p_x$, $m_B = 9$.</p>
+              <p style="margin-top:6px;"><strong>New demands for $x$:</strong> $x_A^* = (2/3)(3p_x/p_x) = 2$. $x_B^* = (1/3)(9/p_x) = 3/p_x$.</p>
+              <p style="margin-top:6px;"><strong>Market clearing:</strong> $2 + 3/p_x = 3 \implies 3/p_x = 1 \implies p_x^* = 3$.</p>
+              <p style="margin-top:6px;"><strong>Intuition:</strong> $x$ became relatively scarcer (endowment fell from 6 to 3 while $y$ stayed the same in relative terms). Scarcer $x$ means higher relative price of $x$ — $p_x^*$ rose from 1 to 3. This makes sense.</p>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PROBLEM 6 — CARA Risk
+     ══════════════════════════════════════════════════════════ -->
+<div class="problem-card" id="p6">
+  <div class="problem-header">
+    <div class="problem-number">6</div>
+    <div class="problem-title">CARA Utility — Certainty Equivalent &amp; Investment Decision</div>
+    <div class="type-badge">Expected Utility + CARA-Normal + Certainty Equivalent</div>
+    <div class="point-badge">Final Style</div>
+  </div>
+  <div class="problem-body">
+
+    <div class="exam-quote">
+      <p>An investor has CARA utility $u(W) = -e^{-\gamma W}$ with risk aversion $\gamma = 0.02$. Current wealth $W_0 = 100$. A risky asset pays $\tilde{X} \sim N(\mu, \sigma^2)$ with $\mu = 8$ (expected gain) and $\sigma^2 = 400$ (variance). A safe asset pays 0.</p>
+      <span class="part-label">(a)</span>
+      <p>Compute the certainty equivalent $CE$ of the risky asset.</p>
+      <span class="part-label">(b)</span>
+      <p>The investor can buy the risky asset for a cost $I = 4$. Should she invest?</p>
+      <span class="part-label">(c)</span>
+      <p>How does your answer change if $\gamma = 0.05$?</p>
+    </div>
+
+    <div class="brain-hook">
+      A startup pitch promises big expected gains, but with huge variance. How much would you pay for this opportunity? The certainty equivalent is the sure amount that makes you exactly indifferent — the maximum you'd rationally pay.
+    </div>
+
+    <details>
+      <summary>Show Full Solution</summary>
+      <div class="solution-body">
+
+        <div class="part-heading">Part (a) — Certainty Equivalent</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 1</div>
+          <div class="step-name">Recall the CARA-Normal Formula</div>
+          <div class="step-why">For CARA utility and normally distributed payoffs, there's a closed-form expression for the certainty equivalent. This formula is worth memorizing cold.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:8px;">For $u(W) = -e^{-\gamma W}$ and $\tilde{W} = W_0 + \tilde{X}$ where $\tilde{X} \sim N(\mu, \sigma^2)$:</p>
+            $$CE = W_0 + \mu - \frac{\gamma}{2}\sigma^2$$
+            <p style="font-family:system-ui;font-size:13px;color:#555;margin-top:6px;">The term $\frac{\gamma}{2}\sigma^2$ is called the <strong>risk premium</strong> — what the investor gives up to avoid risk. The $CE$ is the mean return minus this risk penalty.</p>
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 2</div>
+          <div class="step-name">Derive the Formula from First Principles (Optional but Illuminating)</div>
+          <div class="step-why">Knowing where the formula comes from prevents blind memorization and lets you adapt it to variations.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13px;font-family:system-ui;margin-bottom:6px;">The $CE$ satisfies $u(CE) = E[u(\tilde{W})]$, i.e., $-e^{-\gamma CE} = E[-e^{-\gamma(W_0+\tilde{X})}]$.</p>
+            <p style="font-family:system-ui;font-size:13px;margin-bottom:6px;">Using the moment-generating function of a normal: $E[e^{-\gamma\tilde{X}}] = e^{-\gamma\mu + \gamma^2\sigma^2/2}$.</p>
+            $$-e^{-\gamma CE} = -e^{-\gamma W_0} \cdot e^{-\gamma\mu + \gamma^2\sigma^2/2}$$
+            $$\gamma CE = \gamma W_0 + \gamma\mu - \frac{\gamma^2\sigma^2}{2}$$
+            $$CE = W_0 + \mu - \frac{\gamma\sigma^2}{2} \checkmark$$
+          </div>
+        </div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 3</div>
+          <div class="step-name">Plug In Numbers for $\gamma = 0.02$</div>
+          <div class="step-why">Straightforward computation — but watch the signs carefully.</div>
+          <div class="step-math">
+            $$CE = 100 + 8 - \frac{0.02}{2}(400) = 108 - \frac{0.02 \times 400}{2} = 108 - 4 = 104$$
+            <p style="font-family:system-ui;font-size:13px;color:#555;margin-top:6px;">Risk premium = $\frac{\gamma}{2}\sigma^2 = \frac{0.02}{2}(400) = 4$. The investor requires a risk premium of 4 to hold this asset.</p>
+          </div>
+        </div>
+
+        <div class="part-heading">Part (b) — Should She Invest?</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 4</div>
+          <div class="step-name">Compare CE to the Investment Cost</div>
+          <div class="step-why">The investor invests if the certainty equivalent of the risky payoff exceeds the wealth she would have by not investing plus the cost of the investment.</div>
+          <div class="step-math">
+            <p style="font-family:system-ui;font-size:13.5px;margin-bottom:6px;">Without investing: wealth = $W_0 = 100$. With investment at cost $I = 4$: expected wealth = $W_0 - I + E[\tilde{X}] = 100 - 4 + 8 = 104$. But she's risk averse, so we compare $CE$ to $W_0 + I = 104$.</p>
+            <p style="font-family:system-ui;font-size:13.5px;">Invest if: $CE \geq W_0 + I$</p>
+            $$104 \geq 100 + 4 = 104$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:8px;"><strong>Result: $CE = W_0 + I = 104$. The investor is exactly indifferent.</strong> She is willing to pay exactly $I = 4$ for this asset — the risk premium exactly equals the investment cost. She should (weakly) invest.</p>
+          </div>
+          <div class="trap-box">
+            <strong>⚠️ TRAP:</strong> Don't compare $CE$ to $W_0$ alone. The question asks whether she should pay $I = 4$ for the asset. The correct comparison is $CE \geq W_0 + I$, i.e., does the risky asset's certainty equivalent exceed what she gives up (safe wealth plus the cost)?
+          </div>
+        </div>
+
+        <div class="part-heading">Part (c) — Change to $\gamma = 0.05$</div>
+
+        <div class="solve-step">
+          <div class="step-label">Step 5</div>
+          <div class="step-name">Recompute with Higher Risk Aversion</div>
+          <div class="step-why">Higher $\gamma$ = more risk averse = larger risk premium = smaller certainty equivalent.</div>
+          <div class="step-math">
+            $$CE = 100 + 8 - \frac{0.05}{2}(400) = 108 - 10 = 98$$
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:8px;">Now: $CE = 98 &lt; 104 = W_0 + I$. <strong>Do not invest.</strong></p>
+            <p style="font-family:system-ui;font-size:13.5px;margin-top:6px;">The risk premium is now $\frac{0.05}{2}(400) = 10$, which exceeds the expected gain of $\mu = 8$. The variance is so penalizing that even the positive expected return isn't enough to justify the investment at cost $I = 4$.</p>
+          </div>
+        </div>
+
+        <div class="insight-box">
+          💡 <strong>Key Insight:</strong> For CARA-Normal, the certainty equivalent takes the beautifully clean form $CE = W_0 + \mu - \frac{\gamma}{2}\sigma^2$. The risk premium $\frac{\gamma}{2}\sigma^2$ grows linearly in risk aversion $\gamma$ and linearly in variance $\sigma^2$. This makes CARA-Normal the workhorse model of financial economics: everything is in closed form, and intuitions about risk aversion translate directly into numbers.
+        </div>
+
+        <div class="self-test">
+          <strong>🎯 Self-Test:</strong> With $\gamma = 0.02$, what is the maximum variance $\bar{\sigma}^2$ the investor would tolerate before declining to invest at cost $I = 4$? (Keep $\mu = 8$, $W_0 = 100$.)
+          <details>
+            <summary>Show Answer</summary>
+            <div class="self-test-answer">
+              <p>Invest if $CE \geq W_0 + I$, i.e., $100 + 8 - \frac{0.02}{2}\sigma^2 \geq 104$.</p>
+              <p style="margin-top:6px;">$108 - 0.01\sigma^2 \geq 104$</p>
+              <p style="margin-top:4px;">$0.01\sigma^2 \leq 4 \implies \sigma^2 \leq 400$.</p>
+              <p style="margin-top:6px;">Maximum tolerable variance is $\bar{\sigma}^2 = 400$. The original problem sits exactly at this threshold — confirming the investor is indifferent at $\sigma^2 = 400$. Any higher variance and she declines.</p>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- Bottom spacer -->
+<div style="height:40px;"></div>
+
+</main>
+
+</body>
+</html>
