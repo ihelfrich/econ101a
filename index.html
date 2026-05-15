@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Econ 101A — Vedant's Interactive Guide</title>
+<link rel="stylesheet" href="style.css"/>
+
+<!-- MathJax -->
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+<!-- D3 v7 -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+
+<!-- Three.js importmap -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     HERO
+     ══════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div id="three-canvas" class="hero-canvas"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">UC Berkeley · Econ 101A · Prof. Gaubert · Spring 2026</div>
+    <h1 class="hero-title">Microeconomic Theory</h1>
+    <p class="hero-sub">Interactive · Tiered · From Principles to Varian</p>
+    <div class="hero-chips">
+      <a href="#ump" class="chip">Consumer Theory</a>
+      <a href="#duality" class="chip">Duality</a>
+      <a href="#slutsky" class="chip">Slutsky</a>
+      <a href="#risk" class="chip">Risk &amp; EU</a>
+      <a href="#ge" class="chip">General Equilibrium</a>
+      <a href="#oligopoly" class="chip">Game Theory</a>
+      <a href="#atlas" class="chip chip-gold">Pattern Atlas →</a>
+    </div>
+    <!-- 3D Controls -->
+    <div class="hero-controls" id="hero-controls">
+      <span class="ctrl-label">3D Surface controls</span>
+      <label>α <input type="range" id="h-alpha" min="0.1" max="0.9" step="0.05" value="0.5"/>
+        <span id="h-alpha-v">0.50</span></label>
+      <label>pₓ <input type="range" id="h-px" min="0.5" max="5" step="0.5" value="2"/>
+        <span id="h-px-v">2.0</span></label>
+      <label>m <input type="range" id="h-m" min="5" max="30" step="1" value="10"/>
+        <span id="h-m-v">10</span></label>
+    </div>
+  </div>
+  <a href="#preferences" class="hero-scroll" aria-label="scroll down">↓</a>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     LAYOUT
+     ══════════════════════════════════════════════════════════ -->
+<div class="layout">
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">∂</div>
+    <div>
+      <div class="logo-title">Econ 101A</div>
+      <div class="logo-sub">Vedant · Spring 2026</div>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-group"><div class="nav-group-label">Foundations</div>
+      <a href="#preferences">1. Rationality &amp; Preferences</a>
+      <a href="#utility">2. Utility Functions</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Consumer Theory</div>
+      <a href="#ump">3. Marshallian Demand</a>
+      <a href="#duality">4. Duality &amp; Hicksian</a>
+      <a href="#slutsky">5. Slutsky Equation</a>
+      <a href="#elasticity">6. Elasticity &amp; Tax</a>
+      <a href="#intertemporal">7. Intertemporal Choice</a>
+      <a href="#risk">8. Risk &amp; EU</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Producer Theory</div>
+      <a href="#costs">9. Production &amp; Costs</a>
+      <a href="#profit">10. Profit Maximization</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Markets</div>
+      <a href="#competitive">11. Competitive Eq.</a>
+      <a href="#monopoly">12. Monopoly &amp; PD</a>
+      <a href="#oligopoly">13. Oligopoly &amp; GT</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">General Equilibrium</div>
+      <a href="#ge">14. Walrasian GE</a>
+      <a href="#crusoe">15. Robinson Crusoe</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Market Failures</div>
+      <a href="#externalities">16. Externalities</a>
+      <a href="#asyminfo">17. Adverse Selection</a>
+      <a href="#behavioral">18. Behavioral Econ</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Reference</div>
+      <a href="#formulas">Formula Bank</a>
+      <a href="#atlas">Pattern Atlas</a>
+      <a href="#downloads">Downloads</a>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="dark-toggle" id="dark-toggle" title="Toggle dark mode">☾ Dark</button>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+
+<!-- ── SECTION 1 ─────────────────────────────────────────── -->
+<section class="section reveal" id="preferences">
+  <h2 class="section-title">1. Preferences &amp; Rationality <span>Weeks 1–2</span></h2>
+  <div class="two-col">
+    <div>
+      <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="pref" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="pref" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="pref" onclick="switchTier(this)">Tier 3</button></div>
+      <div class="tier-panel active" data-tier="1" data-group="pref">
+        <span class="tier-badge t1">100A — Intuition</span>
+        <p>A <strong>preference relation</strong> $\succsim$ encodes "at least as good as" without any numbers. From it, we derive strict preference $\succ$ and indifference $\sim$. <strong>Indifference curves</strong> are level sets of preferences.</p>
+        <p>Moving northeast is always better (monotonicity). Bowed curves toward the origin mean consumers prefer variety (convexity).</p>
+      </div>
+      <div class="tier-panel" data-tier="2" data-group="pref">
+        <span class="tier-badge t2">101A — Rigorous</span>
+        <p><strong>Four axioms:</strong> (1) <em>Completeness</em> — $x\succsim y$ or $y\succsim x$; (2) <em>Transitivity</em> — no cycles; (3) <em>Continuity</em> — upper/lower contour sets are closed; (4) <em>Monotonicity</em> — $x\gg y\Rightarrow x\succ y$.</p>
+        <div class="box box-key"><div class="box-title">Debreu Representation Theorem</div>Complete + transitive + continuous $\Rightarrow$ $\exists$ continuous $u: X\to\mathbb{R}$ with $x\succsim y \iff u(x)\geq u(y)$.</div>
+        <div class="box box-alert"><div class="box-title">Exam Trap</div>Utility is <em>ordinal</em>. $u=xy$ and $u=\ln x+\ln y$ are the same preferences. MRS is invariant to monotone transforms; marginal utilities are not.</div>
+      </div>
+      <div class="tier-panel" data-tier="3" data-group="pref">
+        <span class="tier-badge t3">Varian — Advanced</span>
+        <p><strong>WARP:</strong> If $x$ is chosen when $y$ was affordable, then whenever $y$ is chosen, $x$ must not be affordable. WARP $\Leftrightarrow$ Slutsky matrix NSD $\Leftrightarrow$ compensated demand slopes down.</p>
+        <p><strong>Revealed preference</strong> builds up preference rankings purely from observed choices without assuming a utility function.</p>
+      </div>
+    </div>
+    <div class="side-note-box">
+      <div class="side-note-title">Quick Reference</div>
+      <table class="mini-table">
+        <tr><th>Symbol</th><th>Reads as</th></tr>
+        <tr><td>$x\succsim y$</td><td>$x$ at least as good as $y$</td></tr>
+        <tr><td>$x\succ y$</td><td>$x$ strictly preferred to $y$</td></tr>
+        <tr><td>$x\sim y$</td><td>$x$ indifferent to $y$</td></tr>
+        <tr><td>$u(x)$</td><td>Any representation of $\succsim$</td></tr>
+        <tr><td>$\text{MRS}$</td><td>$-\Delta y/\Delta x$ along IC</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 2 ─────────────────────────────────────────── -->
+<section class="section reveal" id="utility">
+  <h2 class="section-title">2. Utility Functions &amp; Indifference Curves</h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="util" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="util" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="util" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="util">
+    <span class="tier-badge t1">100A</span>
+    <table class="styled"><thead><tr><th>Type</th><th>Form</th><th>MRS</th><th>Shape</th></tr></thead><tbody>
+      <tr><td>Cobb-Douglas</td><td>$x^\alpha y^{1-\alpha}$</td><td>$\alpha y/[(1-\alpha)x]$</td><td>Smooth hyperbola</td></tr>
+      <tr><td>Perfect Substitutes</td><td>$ax+by$</td><td>$a/b$ constant</td><td>Straight lines</td></tr>
+      <tr><td>Perfect Complements</td><td>$\min(ax,by)$</td><td>undefined at kink</td><td>L-shaped</td></tr>
+      <tr><td>Quasilinear</td><td>$v(x)+y$</td><td>$v'(x)$, no $y$</td><td>Parallel vertical</td></tr>
+    </tbody></table>
+  </div>
+  <div class="tier-panel" data-tier="2" data-group="util">
+    <span class="tier-badge t2">101A</span>
+    <p>For Cobb-Douglas $u=x^\alpha y^{1-\alpha}$: $\text{MRS}=\alpha y/[(1-\alpha)x]$ — decreasing in $x$ (diminishing MRS, convex preferences). Corner solutions arise for perfect substitutes when $a/b \neq p_x/p_y$.</p>
+    <div class="box box-alert"><div class="box-title">Leontief Trick</div>For $\min(x/a,y/b)$: optimum always at kink $x/a=y/b$. Combine with budget constraint to solve. No Lagrangian needed (non-differentiable).</div>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="util">
+    <span class="tier-badge t3">Advanced</span>
+    <p><strong>CES utility</strong> $u=[\alpha x^{(\sigma-1)/\sigma}+(1-\alpha)y^{(\sigma-1)/\sigma}]^{\sigma/(\sigma-1)}$ nests all cases: $\sigma\to 1$ = Cobb-Douglas, $\sigma\to\infty$ = perfect substitutes, $\sigma\to 0$ = Leontief. Elasticity of substitution $\sigma = -d\ln(x/y)/d\ln(\text{MRS})$.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 3: UMP ─────────────────────────────────────── -->
+<section class="section reveal" id="ump">
+  <h2 class="section-title">3. Marshallian Demand — The UMP <span>Weeks 2–3</span></h2>
+  <div class="two-col">
+    <div>
+      <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="ump" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="ump" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="ump" onclick="switchTier(this)">Tier 3</button></div>
+      <div class="tier-panel active" data-tier="1" data-group="ump">
+        <span class="tier-badge t1">100A</span>
+        <p>Maximize utility on the budget line $p_x x+p_y y=m$. Solution: indifference curve tangent to budget line, i.e., $\text{MRS}=p_x/p_y$.</p>
+      </div>
+      <div class="tier-panel" data-tier="2" data-group="ump">
+        <span class="tier-badge t2">101A</span>
+        <p>$\mathcal{L}=u(x,y)-\lambda(p_x x+p_y y-m)$. FOCs: $u_x=\lambda p_x$, $u_y=\lambda p_y\Rightarrow u_x/u_y=p_x/p_y$.</p>
+        <div class="box box-formula"><div class="box-title">Income-Share Rule (Cobb-Douglas)</div>$$x^*=\frac{\alpha m}{p_x},\quad y^*=\frac{(1-\alpha)m}{p_y}$$Always spends fraction $\alpha$ on $x$, regardless of prices.</div>
+      </div>
+      <div class="tier-panel" data-tier="3" data-group="ump">
+        <span class="tier-badge t3">Advanced</span>
+        <p><strong>Roy's Identity:</strong> $x^*(p,m)=-(\partial v/\partial p_x)/(\partial v/\partial m)$. For CD: $v(p,m)=m\cdot\alpha^\alpha(1-\alpha)^{1-\alpha}/p_x^\alpha p_y^{1-\alpha}$. Apply Roy's to verify $x^*=\alpha m/p_x$.</p>
+      </div>
+
+      <!-- Real-time calculator -->
+      <div class="calc-card" style="margin-top:14px">
+        <div class="calc-card-title">⚡ Live: Budget &amp; Indifference Curves</div>
+        <div class="slider-row"><label>$\alpha$</label><input type="range" id="bic-alpha" min="0.1" max="0.9" step="0.05" value="0.5"/><span id="bic-alpha-v">0.50</span></div>
+        <div class="slider-row"><label>$m$</label><input type="range" id="bic-m" min="5" max="40" step="1" value="20"/><span id="bic-m-v">20</span></div>
+        <div class="slider-row"><label>$p_x$</label><input type="range" id="bic-px" min="0.5" max="6" step="0.5" value="2"/><span id="bic-px-v">2.0</span></div>
+        <div class="slider-row"><label>$p_y$</label><input type="range" id="bic-py" min="0.5" max="4" step="0.5" value="1"/><span id="bic-py-v">1.0</span></div>
+        <div class="calc-output" id="bic-output"></div>
+      </div>
+    </div>
+    <div class="viz-panel">
+      <div class="viz-title">Budget Line &amp; Indifference Curves</div>
+      <div id="d3-budgetic"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 4: DUALITY ──────────────────────────────────── -->
+<section class="section reveal" id="duality">
+  <h2 class="section-title">4. Duality — Expenditure Function &amp; Hicksian Demand <span>Week 4</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="dual" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="dual" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="dual" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="dual">
+    <span class="tier-badge t1">100A</span>
+    <p>Dual question: what is the <em>minimum cost</em> to reach utility $\bar{u}$? Answer: the <strong>expenditure function</strong> $e(p,\bar{u})$ and <strong>Hicksian (compensated) demand</strong> $h(p,\bar{u})$. Hicksian demand moves along an IC; it isolates the pure substitution effect.</p>
+  </div>
+  <div class="tier-panel" data-tier="2" data-group="dual">
+    <span class="tier-badge t2">101A</span>
+    <div class="box box-key"><div class="box-title">Shephard's Lemma</div>$$\frac{\partial e(p,\bar{u})}{\partial p_x} = h_x(p,\bar{u})$$Differentiate the expenditure function to recover Hicksian demand — no re-solving.</div>
+    <div class="box box-formula"><div class="box-title">Duality Identities</div>$$e(p,v(p,m))=m \qquad v(p,e(p,\bar{u}))=\bar{u}$$$$x^*(p,m)=h(p,v(p,m)) \qquad h(p,\bar{u})=x^*(p,e(p,\bar{u}))$$</div>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="dual">
+    <span class="tier-badge t3">Advanced</span>
+    <p>The expenditure function is: non-decreasing in $(p,\bar{u})$; homogeneous degree 1 in $p$; <strong>concave in $p$</strong> (Hessian $\partial^2 e/\partial p_i\partial p_j$ NSD). The NSD condition is equivalent to Slutsky NSD — Hicksian demand slopes down.</p>
+    <p><strong>Welfare:</strong> $CV=e(p^1,u^0)-m$; $EV=m-e(p^0,u^1)$. Areas under Hicksian demand curves.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 5: SLUTSKY ──────────────────────────────────── -->
+<section class="section reveal" id="slutsky">
+  <h2 class="section-title">5. The Slutsky Equation <span>Week 4</span></h2>
+  <div class="two-col">
+    <div>
+      <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="slut" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="slut" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="slut" onclick="switchTier(this)">Tier 3</button></div>
+      <div class="tier-panel active" data-tier="1" data-group="slut">
+        <span class="tier-badge t1">100A</span>
+        <p>Price rise → two simultaneous effects: <strong>SE</strong> (substitute toward cheaper good, always negative) and <strong>IE</strong> (real income falls, sign depends on good type). Giffen good: IE dominates, demand rises with price.</p>
+      </div>
+      <div class="tier-panel" data-tier="2" data-group="slut">
+        <span class="tier-badge t2">101A</span>
+        <p>From $x^*(p,e(p,\bar{u}))=h(p,\bar{u})$, differentiate w.r.t. $p_x$:</p>
+        <div class="box box-formula"><div class="box-title">Slutsky Equation</div>$$\frac{\partial x^*}{\partial p_x} = \underbrace{\frac{\partial h}{\partial p_x}}_{\leq\,0} - x^*\cdot\frac{\partial x^*}{\partial m}$$</div>
+      </div>
+      <div class="tier-panel" data-tier="3" data-group="slut">
+        <span class="tier-badge t3">Advanced</span>
+        <p>Slutsky matrix $S_{ij}=\partial h_i/\partial p_j$: symmetric (Young's theorem on $e$), NSD, and satisfies $\sum_j S_{ij}p_j=0$ (Euler homogeneity). NSD $\Leftrightarrow$ own substitution effect $S_{ii}\leq 0$ always.</p>
+      </div>
+
+      <div class="calc-card" style="margin-top:14px">
+        <div class="calc-card-title">⚡ Live: Slutsky Decomposition</div>
+        <div class="slider-row"><label>$\alpha$</label><input type="range" id="sl2-alpha" min="0.1" max="0.9" step="0.05" value="0.5"/><span id="sl2-alpha-v">0.50</span></div>
+        <div class="slider-row"><label>$m$</label><input type="range" id="sl2-m" min="5" max="40" step="1" value="20"/><span id="sl2-m-v">20</span></div>
+        <div class="slider-row"><label>$p_y$</label><input type="range" id="sl2-py" min="0.5" max="4" step="0.5" value="1"/><span id="sl2-py-v">1.0</span></div>
+        <div class="slider-row"><label>$p_x^0$ (initial)</label><input type="range" id="sl2-px0" min="0.5" max="4" step="0.5" value="1"/><span id="sl2-px0-v">1.0</span></div>
+        <div class="slider-row"><label>$p_x^1$ (final)</label><input type="range" id="sl2-px1" min="1" max="8" step="0.5" value="4"/><span id="sl2-px1-v">4.0</span></div>
+        <div class="calc-output" id="sl2-output"></div>
+      </div>
+    </div>
+    <div class="viz-panel">
+      <div class="viz-title">Slutsky Decomposition</div>
+      <div class="viz-legend">
+        <span style="color:#003262">■</span> Budget₀
+        <span style="color:#c0392b">■</span> Budget₁
+        <span style="color:#6c3483">- -</span> Compensated
+        <span style="color:#003262">●</span> A
+        <span style="color:#6c3483">●</span> H (Hicksian)
+        <span style="color:#c0392b">●</span> B
+      </div>
+      <div id="d3-slutsky"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 6: ELASTICITY ──────────────────────────────── -->
+<section class="section reveal" id="elasticity">
+  <h2 class="section-title">6. Elasticity &amp; Tax Incidence <span>Week 5</span></h2>
+  <div class="two-col">
+    <div>
+      <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="elast" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="elast" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="elast" onclick="switchTier(this)">Tier 3</button></div>
+      <div class="tier-panel active" data-tier="1" data-group="elast">
+        <span class="tier-badge t1">100A</span>
+        <p>Elasticity = % response / % change. Tax incidence depends on who is <em>less elastic</em>. More inelastic side bears more of the tax, regardless of who legally pays it.</p>
+      </div>
+      <div class="tier-panel" data-tier="2" data-group="elast">
+        <span class="tier-badge t2">101A</span>
+        <p>With tax $t$ on producers: $D(p)=S(p-t)$. Define $F(p,t)=D(p)-S(p-t)=0$. IFT gives:</p>
+        <div class="box box-formula"><div class="box-title">Tax Incidence via IFT</div>$$\frac{dp^*}{dt}=\frac{\varepsilon_S}{\varepsilon_S-\varepsilon_D}\in(0,1)$$Consumer bears fraction $\varepsilon_S/(\varepsilon_S-\varepsilon_D)$ of the tax.</div>
+      </div>
+      <div class="tier-panel" data-tier="3" data-group="elast">
+        <span class="tier-badge t3">Advanced</span>
+        <p>IFT requires $F_p=D_p-S_p\neq 0$ (always true since $D_p<0$, $S_p>0$). Welfare: $\Delta CS+\Delta PS=-t\cdot Q^*-DWL$ where $DWL=\frac{1}{2}t^2/(|D_p|^{-1}+S_p^{-1})$ for linear curves.</p>
+      </div>
+      <div class="calc-card" style="margin-top:14px">
+        <div class="calc-card-title">⚡ Live: S/D with Tax Wedge</div>
+        <div class="slider-row"><label>Demand intercept $a$</label><input type="range" id="sd-a" min="40" max="150" step="5" value="100"/><span id="sd-a-v">100</span></div>
+        <div class="slider-row"><label>Demand slope $b$</label><input type="range" id="sd-b" min="0.5" max="3" step="0.5" value="1"/><span id="sd-b-v">1.0</span></div>
+        <div class="slider-row"><label>Supply slope</label><input type="range" id="sd-s" min="0.2" max="3" step="0.2" value="0.8"/><span id="sd-s-v">0.8</span></div>
+        <div class="slider-row"><label>Tax $t$</label><input type="range" id="sd-t" min="0" max="50" step="1" value="15"/><span id="sd-t-v">15</span></div>
+      </div>
+    </div>
+    <div class="viz-panel">
+      <div class="viz-title">Supply, Demand &amp; Tax</div>
+      <div class="viz-legend">
+        <span style="color:#003262">■</span> CS &nbsp;
+        <span style="color:#007840">■</span> PS &nbsp;
+        <span style="color:#FDB515">■</span> Gov. Revenue &nbsp;
+        <span style="color:#c0392b">■</span> DWL
+      </div>
+      <div id="d3-supplydemand"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 7: INTERTEMPORAL ───────────────────────────── -->
+<section class="section reveal" id="intertemporal">
+  <h2 class="section-title">7. Intertemporal Choice &amp; The Euler Equation <span>Week 5</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="inter" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="inter" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="inter" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="inter">
+    <span class="tier-badge t1">100A</span>
+    <p>Two periods, income $(y_0,y_1)$, interest rate $r$. PV budget: $c_0+c_1/(1+r)=W$. Discount factor $\beta=1/(1+\rho)$ reflects impatience.</p>
+  </div>
+  <div class="tier-panel" data-tier="2" data-group="inter">
+    <span class="tier-badge t2">101A</span>
+    <div class="box box-formula"><div class="box-title">Euler Equation</div>$$u'(c_0)=\beta(1+r)\,u'(c_1)$$Log utility: $c_1/c_0=\beta(1+r)$. Save more if $\beta(1+r)>1$.</div>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="inter">
+    <span class="tier-badge t3">Advanced</span>
+    <p>CRRA $u=c^{1-\rho}/(1-\rho)$: consumption growth $c_1/c_0=[\beta(1+r)]^{1/\rho}$. EIS $=1/\rho$. Only permanent income shocks affect consumption (Permanent Income Hypothesis).</p>
+  </div>
+
+  <div class="calc-card">
+    <div class="calc-card-title">⚡ Euler Equation Solver (Log Utility)</div>
+    <div class="calc-grid">
+      <div class="calc-field"><label>$\beta$</label><input type="number" id="eu-beta" value="0.95" step="0.01"/></div>
+      <div class="calc-field"><label>$r$</label><input type="number" id="eu-r" value="0.05" step="0.01"/></div>
+      <div class="calc-field"><label>Wealth $W$</label><input type="number" id="eu-w" value="100"/></div>
+    </div>
+    <button class="calc-btn" onclick="calcEuler()">Solve</button>
+    <div class="calc-result" id="eu-result"></div>
+  </div>
+</section>
+
+<!-- ── SECTION 8: RISK ────────────────────────────────────── -->
+<section class="section reveal" id="risk">
+  <h2 class="section-title">8. Risk &amp; Expected Utility <span>Week 6</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="risk" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="risk" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="risk" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="risk">
+    <span class="tier-badge t1">100A</span>
+    <p>Risk-averse people prefer sure $E[X]$ over the gamble $X$. Jensen's Inequality for concave $u$: $E[u(X)] \leq u(E[X])$. Risk premium = certainty equivalent gap.</p>
+  </div>
+  <div class="tier-panel" data-tier="2" data-group="risk">
+    <span class="tier-badge t2">101A</span>
+    <p>Arrow-Pratt ARA: $A(w)=-u''(w)/u'(w)$. CARA: $u=-e^{-\gamma w}$, $A(w)=\gamma$.</p>
+    <div class="box box-formula"><div class="box-title">CARA-Normal Certainty Equivalent</div>$$\tilde{X}\sim N(\mu,\sigma^2)\implies CE=W_0+\mu-\frac{\gamma}{2}\sigma^2$$Invest iff $\mu-\frac{\gamma}{2}\sigma^2\geq I$.</div>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="risk">
+    <span class="tier-badge t3">Advanced</span>
+    <p>MGF proof: $E[-e^{-\gamma\tilde{W}}]=-e^{-\gamma W_0}E[e^{-\gamma\tilde{X}}]=-e^{-\gamma W_0}e^{-\gamma\mu+\gamma^2\sigma^2/2}$. Pratt approximation exact here: $\pi=\frac{1}{2}A(w)\sigma^2=\frac{\gamma}{2}\sigma^2$.</p>
+  </div>
+
+  <div class="calc-card">
+    <div class="calc-card-title">⚡ CARA Certainty Equivalent Calculator</div>
+    <div class="calc-grid">
+      <div class="calc-field"><label>$\gamma$</label><input type="number" id="cara-g" value="0.02" step="0.001"/></div>
+      <div class="calc-field"><label>$W_0$</label><input type="number" id="cara-w0" value="100"/></div>
+      <div class="calc-field"><label>$\mu$ (mean payoff)</label><input type="number" id="cara-mu" value="25"/></div>
+      <div class="calc-field"><label>$\sigma^2$ (variance)</label><input type="number" id="cara-var" value="400"/></div>
+      <div class="calc-field"><label>Investment cost $I$</label><input type="number" id="cara-I" value="10"/></div>
+    </div>
+    <button class="calc-btn" onclick="calcCARA()">Compute CE</button>
+    <div class="calc-result" id="cara-result"></div>
+  </div>
+</section>
+
+<!-- ── SECTIONS 9–11 ─────────────────────────────────────── -->
+<section class="section reveal" id="costs">
+  <h2 class="section-title">9. Production &amp; Cost Minimization <span>Weeks 7–8</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="cost" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="cost" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="cost" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="cost"><span class="tier-badge t1">100A</span><p>Minimize input costs $wL+rK$ subject to hitting output $q=f(K,L)$. Tangency: $\text{MRTS}=w/r$ (isoquant tangent to isocost). Solution gives conditional factor demands and the cost function $c(w,r,q)$.</p></div>
+  <div class="tier-panel" data-tier="2" data-group="cost"><span class="tier-badge t2">101A</span>
+    <div class="box box-formula"><div class="box-title">Shephard's Lemma (Firms)</div>$$\frac{\partial c(w,r,q)}{\partial w}=L^c(w,r,q),\quad\frac{\partial c}{\partial r}=K^c$$</div>
+    <p>Cost function properties: non-decreasing in $(w,r,q)$; HD1 in $(w,r)$; concave in $(w,r)$. Concavity $\Rightarrow$ factor demand slopes down.</p>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="cost"><span class="tier-badge t3">Advanced</span><p>The Hessian of $c$ w.r.t. $(w,r)$ is NSD — exactly the matrix that gives concavity. Duality: the cost function completely encodes the production technology (Shephard-Uzawa). Hotelling's Lemma: $\partial\pi^*(p)/\partial p=y^*(p)$.</p></div>
+</section>
+
+<section class="section reveal" id="profit">
+  <h2 class="section-title">10. Profit Maximization &amp; IFT Comparative Statics <span>Week 8</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="prof" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="prof" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="prof" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="prof"><span class="tier-badge t1">100A</span><p>Competitive firm sets $p=MC$. SOC: diminishing MP. Long-run: free entry drives $\pi\to 0$, $p^*=\min AC$.</p></div>
+  <div class="tier-panel" data-tier="2" data-group="prof"><span class="tier-badge t2">101A</span>
+    <div class="box box-formula"><div class="box-title">IFT on FOC</div>FOC: $F(L^*,p,w)\equiv p\cdot f_L(L^*)-w=0$. By IFT:$$\frac{\partial L^*}{\partial p}=-\frac{F_p}{F_L}=-\frac{f_L(L^*)}{p\cdot f_{LL}(L^*)}>0$$Sign: $f_L>0$, $f_{LL}<0$ (SOC) $\Rightarrow$ positive.</div>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="prof"><span class="tier-badge t3">Advanced</span><p>The IFT applies here because SOC guarantees $F_L=p\cdot f_{LL}<0\neq 0$. The denominator sign always comes from the SOC — this is the general principle. For any comparative static: sign$(\partial x^*/\partial\alpha)=$sign$(-F_\alpha)$ when SOC gives $F_x<0$.</p></div>
+</section>
+
+<section class="section reveal" id="competitive">
+  <h2 class="section-title">11. Competitive Equilibrium <span>Week 9</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="comp" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="comp" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="comp" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="comp"><span class="tier-badge t1">100A</span><p>Market clears: $D(p^*)=S(p^*)$. Tax shifts supply; incidence depends on elasticities. Long-run: $n$ adjusts until $\pi=0$.</p></div>
+  <div class="tier-panel" data-tier="2" data-group="comp"><span class="tier-badge t2">101A</span>
+    <div class="box box-formula"><div class="box-title">4-Step IFT Method</div>
+      <div class="step"><span class="step-num">1</span>Write $F(p^*,\theta)=D(p^*;\theta)-S(p^*;\theta)=0$</div>
+      <div class="step"><span class="step-num">2</span>Check $F_{p^*}=D_p-S_p\neq 0$ ✓</div>
+      <div class="step"><span class="step-num">3</span>$dp^*/d\theta=-F_\theta/F_{p^*}$</div>
+      <div class="step"><span class="step-num">4</span>Sign using economic restrictions</div>
+    </div>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="comp"><span class="tier-badge t3">Advanced</span><p>Walras' Law: $\sum_j p_j z_j(p)=0$ identically (value of excess demands = 0). Lets you drop one market-clearing equation. In LR competitive equilibrium, only input-price changes shift the supply curve; demand shocks change $n$ not $p^*$.</p></div>
+</section>
+
+<!-- ── SECTION 12: MONOPOLY ───────────────────────────────── -->
+<section class="section reveal" id="monopoly">
+  <h2 class="section-title">12. Monopoly &amp; Price Discrimination <span>Week 10</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="mono" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="mono" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="mono" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="mono"><span class="tier-badge t1">100A</span><p>Monopolist sets $MR=MC$. Since $MR < P$, monopoly price exceeds competitive price, quantity is lower, and there is deadweight loss.</p></div>
+  <div class="tier-panel" data-tier="2" data-group="mono"><span class="tier-badge t2">101A</span>
+    <div class="box box-formula"><div class="box-title">Lerner Index</div>$$\frac{P-MC}{P}=\frac{1}{|\varepsilon|}$$3rd-degree PD: $MR_1=MR_2=MC$. Higher price to inelastic market.</div>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="mono"><span class="tier-badge t3">Advanced</span><p>DWL$=\int_{Q^M}^{Q^C}[P(Q)-MC]dQ$. 1st-degree PD: no DWL but all surplus goes to firm. 2nd-degree: IC and IR constraints bind; high-type gets info rent; low-type distorted downward.</p></div>
+
+  <div class="calc-card">
+    <div class="calc-card-title">⚡ Monopoly Equilibrium (Linear Demand: $P=a-bQ$)</div>
+    <div class="calc-grid">
+      <div class="calc-field"><label>$a$</label><input type="number" id="mn-a" value="100"/></div>
+      <div class="calc-field"><label>$b$</label><input type="number" id="mn-b" value="1"/></div>
+      <div class="calc-field"><label>$MC = c$</label><input type="number" id="mn-c" value="20"/></div>
+    </div>
+    <button class="calc-btn" onclick="calcMonopoly()">Compute</button>
+    <div class="calc-result" id="mn-result"></div>
+    <canvas id="mn-chart" width="540" height="260" style="margin-top:12px;display:none;border-radius:6px;"></canvas>
+  </div>
+</section>
+
+<!-- ── SECTION 13: OLIGOPOLY ──────────────────────────────── -->
+<section class="section reveal" id="oligopoly">
+  <h2 class="section-title">13. Oligopoly &amp; Game Theory <span>Weeks 10–11</span></h2>
+  <div class="two-col">
+    <div>
+      <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="olig" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="olig" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="olig" onclick="switchTier(this)">Tier 3</button></div>
+      <div class="tier-panel active" data-tier="1" data-group="olig"><span class="tier-badge t1">100A</span>
+        <table class="styled"><thead><tr><th>Model</th><th>Instrument</th><th>Result</th></tr></thead><tbody>
+          <tr><td>Cournot</td><td>Quantities</td><td>$P>MC$, more firms → competitive</td></tr>
+          <tr><td>Stackelberg</td><td>Quantities (seq.)</td><td>Leader earns more</td></tr>
+          <tr><td>Bertrand</td><td>Prices</td><td>$P=MC$ even with 2 firms</td></tr>
+        </tbody></table>
+      </div>
+      <div class="tier-panel" data-tier="2" data-group="olig"><span class="tier-badge t2">101A</span>
+        <div class="box box-formula"><div class="box-title">Symmetric Cournot NE ($n$ firms, $P=a-bQ$)</div>$$q^*=\frac{a-c}{b(n+1)},\quad P^*=\frac{a+nc}{n+1},\quad\pi^*=b(q^*)^2$$</div>
+        <p><strong>Stackelberg:</strong> Backward induction. Leader $q_1^*=(a-c)/(2b)$, follower $q_2^*=(a-c)/(4b)$.</p>
+      </div>
+      <div class="tier-panel" data-tier="3" data-group="olig"><span class="tier-badge t3">Advanced</span><p>NE: strategy profile where no player can profitably deviate. Nash (1950): every finite game has a NE in mixed strategies. Bertrand paradox requires homogeneous goods + equal costs. Differentiated Bertrand → $P>MC$.</p></div>
+      <div class="calc-card" style="margin-top:14px">
+        <div class="calc-card-title">⚡ Live: Cournot Best-Response</div>
+        <div class="slider-row"><label>$a$ (intercept)</label><input type="range" id="co2-a" min="50" max="150" step="5" value="90"/><span id="co2-a-v">90</span></div>
+        <div class="slider-row"><label>$b$ (slope)</label><input type="range" id="co2-b" min="0.5" max="3" step="0.5" value="1"/><span id="co2-b-v">1.0</span></div>
+        <div class="slider-row"><label>$c$ (MC)</label><input type="range" id="co2-c" min="5" max="60" step="5" value="15"/><span id="co2-c-v">15</span></div>
+      </div>
+    </div>
+    <div class="viz-panel">
+      <div class="viz-title">Cournot Best-Response Functions</div>
+      <div class="viz-legend">
+        <span style="color:#003262">—</span> BR₁(q₂) &nbsp;
+        <span style="color:#c05000">—</span> BR₂(q₁) &nbsp;
+        <span style="color:#c0392b">●</span> Nash Equilibrium
+      </div>
+      <div id="d3-cournot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 14: GE ─────────────────────────────────────── -->
+<section class="section reveal" id="ge">
+  <h2 class="section-title">14. Walrasian General Equilibrium <span>Week 11</span></h2>
+  <div class="two-col">
+    <div>
+      <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="ge" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="ge" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="ge" onclick="switchTier(this)">Tier 3</button></div>
+      <div class="tier-panel active" data-tier="1" data-group="ge"><span class="tier-badge t1">100A</span><p>Edgeworth box: fixed total endowments $(\bar\omega_x,\bar\omega_y)$. Pareto improvements exist while MRS's differ. Contract curve = all PO allocations ($MRS^A=MRS^B$).</p></div>
+      <div class="tier-panel" data-tier="2" data-group="ge"><span class="tier-badge t2">101A</span>
+        <div class="box box-formula"><div class="box-title">4-Step Walrasian Method</div>
+          <div class="step"><span class="step-num">1</span>Marshallian demands with $m^i=p_x\omega^i_x+p_y\omega^i_y$</div>
+          <div class="step"><span class="step-num">2</span>Normalize: $p_y=1$</div>
+          <div class="step"><span class="step-num">3</span>Market clearing for $x$: $\sum_i x_i^*=\bar\omega_x\Rightarrow p_x^*$</div>
+          <div class="step"><span class="step-num">4</span>Recover allocations; $y$ clears by Walras' Law</div>
+        </div>
+        <div class="box box-alert"><div class="box-title">Critical: normalize early</div>Set $p_y=1$ before writing wealth. Without normalization: 2 unknowns, 1 equation.</div>
+      </div>
+      <div class="tier-panel" data-tier="3" data-group="ge"><span class="tier-badge t3">Advanced</span><p><strong>FWT:</strong> Every WE is PO. Proof: at WE, $MRS^A=p_x/p_y=MRS^B$ for all consumers → on contract curve.<br/><strong>SWT:</strong> Any PO allocation achievable as WE after lump-sum redistribution (requires convexity).</p></div>
+      <div class="calc-card" style="margin-top:14px">
+        <div class="calc-card-title">⚡ Edgeworth Box Controls</div>
+        <div class="slider-row"><label>$\alpha_A$ (A's Cobb-Douglas)</label><input type="range" id="ew-aA" min="0.1" max="0.9" step="0.05" value="0.5"/><span id="ew-aA-v">0.50</span></div>
+        <div class="slider-row"><label>$\alpha_B$ (B's Cobb-Douglas)</label><input type="range" id="ew-aB" min="0.1" max="0.9" step="0.05" value="0.4"/><span id="ew-aB-v">0.40</span></div>
+        <div class="slider-row"><label>$\bar\omega_x$</label><input type="range" id="ew-wx" min="4" max="16" step="1" value="8"/><span id="ew-wx-v">8</span></div>
+        <div class="slider-row"><label>$\bar\omega_y$</label><input type="range" id="ew-wy" min="3" max="12" step="1" value="6"/><span id="ew-wy-v">6</span></div>
+        <div class="calc-output" id="ew-output">Drag the <span style="color:#c0392b">red dot</span> to move the allocation.</div>
+      </div>
+      <div class="calc-card" style="margin-top:10px">
+        <div class="calc-card-title">⚡ Walrasian GE Solver (Both Cobb-Douglas)</div>
+        <div class="calc-grid">
+          <div class="calc-field"><label>$\alpha_A$</label><input type="number" id="ge-alpha" value="0.5" step="0.01"/></div>
+          <div class="calc-field"><label>$\alpha_B$</label><input type="number" id="ge-beta" value="0.333" step="0.01"/></div>
+          <div class="calc-field"><label>$\omega_{Ax}$</label><input type="number" id="ge-wax" value="4"/></div>
+          <div class="calc-field"><label>$\omega_{By}$</label><input type="number" id="ge-wby" value="3"/></div>
+        </div>
+        <button class="calc-btn" onclick="calcGE()">Solve</button>
+        <div class="calc-result" id="ge-result"></div>
+      </div>
+    </div>
+    <div class="viz-panel">
+      <div class="viz-title">Edgeworth Box — Drag to Explore</div>
+      <div class="viz-legend">
+        <span style="color:#003262">—</span> A's ICs &nbsp;
+        <span style="color:#c05000">—</span> B's ICs &nbsp;
+        <span style="color:#888">- -</span> Contract curve &nbsp;
+        <span style="color:#c0392b">●</span> Allocation
+      </div>
+      <div id="d3-edgeworth"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTIONS 15–18 ─────────────────────────────────────── -->
+<section class="section reveal" id="crusoe">
+  <h2 class="section-title">15. Robinson Crusoe Economy <span>Week 12</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="crusoe" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="crusoe" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="crusoe" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="crusoe"><span class="tier-badge t1">100A</span><p>One consumer = one firm. Planner picks how much to work to maximize $U(\ell,c)$ subject to $c=f(T-\ell)$. Planner optimum: $MRS_{\ell,c}=f'(L)$.</p></div>
+  <div class="tier-panel" data-tier="2" data-group="crusoe"><span class="tier-badge t2">101A</span>
+    <p>Firm: $pf'(L)=w\Rightarrow f'(L)=w/p$. Consumer: $U_\ell/U_c=w/p$. Both give $MRS=w/p=f'(L^*)$. Decentralized equilibrium = planner's solution = <strong>First Welfare Theorem</strong>.</p>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="crusoe"><span class="tier-badge t3">Advanced</span><p>With share $\theta$ of firm: consumer wealth = $wT+\theta\pi^*$. Market clearing: $c^*=f(L^*)$, $L^*=T-\ell^*$. Extension to multiple consumers proves FWT in production economies.</p></div>
+</section>
+
+<section class="section reveal" id="externalities">
+  <h2 class="section-title">16. Externalities &amp; Pigouvian Taxation <span>Week 11</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="ext" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="ext" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="ext" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="ext"><span class="tier-badge t1">100A</span><p>Negative externality: firm doesn't pay the full social cost → overproduces. Pigouvian tax internalizes the harm and restores the social optimum.</p></div>
+  <div class="tier-panel" data-tier="2" data-group="ext"><span class="tier-badge t2">101A</span>
+    <div class="box box-formula"><div class="box-title">Optimal Pigouvian Tax</div>$$t^*=D'(q^S)\quad\text{(MED evaluated at social optimum)}$$Private: $p=C'(q^P)$. Social: $p=C'(q^S)+D'(q^S)$. Evaluate $D'$ at $q^S$, not $q^P$!</div>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="ext"><span class="tier-badge t3">Advanced</span><p>Coase Theorem: if property rights well-defined + zero transaction costs → bargaining achieves social optimum regardless of rights assignment. Samuelson condition for public goods: $\sum_i MB_i=MC_G$.</p></div>
+
+  <div class="calc-card">
+    <div class="calc-card-title">⚡ Pigouvian Tax Calculator ($C(q)=aq^2/2$, $D(q)=dq^2/2$)</div>
+    <div class="calc-grid">
+      <div class="calc-field"><label>Price $p$</label><input type="number" id="pig-p" value="10"/></div>
+      <div class="calc-field"><label>Cost param $a$</label><input type="number" id="pig-a" value="1"/></div>
+      <div class="calc-field"><label>Damage param $d$</label><input type="number" id="pig-d" value="0.5"/></div>
+    </div>
+    <button class="calc-btn" onclick="calcPigouvian()">Compute</button>
+    <div class="calc-result" id="pig-result"></div>
+  </div>
+</section>
+
+<section class="section reveal" id="asyminfo">
+  <h2 class="section-title">17. Adverse Selection — Lemons Model <span>Week 12</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="asym" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="asym" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="asym" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="asym"><span class="tier-badge t1">100A</span><p>Sellers know quality; buyers don't. At average-quality price, only lemons offered → price drops → more lemons → market unravels. Gains from trade in high-quality goods unrealized.</p></div>
+  <div class="tier-panel" data-tier="2" data-group="asym"><span class="tier-badge t2">101A</span>
+    <div class="box box-key"><div class="box-title">Lemons Equilibrium Threshold</div>Buyer WTP: $\mu=qv_H+(1-q)v_L$. High-quality sell iff $\mu\geq c_H$, i.e., $q\geq q^*=(c_H-v_L)/(v_H-v_L)$.<br/>If $q < q^*$: only lemons trade — market failure despite $v_H > c_H$.</div>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="asym"><span class="tier-badge t3">Advanced</span><p>Spence signaling: separating equilibrium when $c_H(e^*)\leq\Delta w\leq c_L(e^*)$. Rothschild-Stiglitz screening: menu with IC and IR constraints; low-type gets distorted quantity; high-type earns information rent.</p></div>
+</section>
+
+<section class="section reveal" id="behavioral">
+  <h2 class="section-title">18. Behavioral Economics <span>Week 12</span></h2>
+  <div class="tier-tabs"><button class="tier-tab active" data-tier="1" data-group="beh" onclick="switchTier(this)">Tier 1</button><button class="tier-tab" data-tier="2" data-group="beh" onclick="switchTier(this)">Tier 2</button><button class="tier-tab" data-tier="3" data-group="beh" onclick="switchTier(this)">Tier 3</button></div>
+  <div class="tier-panel active" data-tier="1" data-group="beh"><span class="tier-badge t1">100A</span><p>People deviate systematically from rationality: present bias (overweight immediate), loss aversion (losses hurt ~2× more than gains), default effects (opt-out vs opt-in dramatically changes behavior).</p></div>
+  <div class="tier-panel" data-tier="2" data-group="beh"><span class="tier-badge t2">101A</span>
+    <div class="box box-formula"><div class="box-title">Quasi-Hyperbolic Discounting</div>$$U_t=u_t+\beta\sum_{s>t}\delta^{s-t}u_s,\quad\beta<1$$Present bias → time inconsistency. Naive: doesn't anticipate. Sophisticated: uses commitment devices.</div>
+    <p><strong>Prospect theory:</strong> Reference-dependent, loss-averse, probability-weighted. $v(x)=x^\alpha$ (gains), $-\lambda(-x)^\alpha$ (losses), $\lambda\approx 2.25$.</p>
+  </div>
+  <div class="tier-panel" data-tier="3" data-group="beh"><span class="tier-badge t3">Advanced</span><p>Libertarian paternalism (Thaler-Sunstein): preserve choice, architect defaults to improve outcomes. Pigouvian taxes correct externalities; nudges correct <em>internalities</em> (self-inflicted harms from bounded rationality). System 1 vs. System 2 (Kahneman).</p></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     FORMULA BANK
+     ══════════════════════════════════════════════════════════ -->
+<section class="section reveal" id="formulas">
+  <h2 class="section-title">Formula Bank <span>Search anything</span></h2>
+  <input type="text" id="formula-search" class="search-input" placeholder="Search — e.g. Slutsky, MRS, Cournot, CARA…"/>
+  <div id="formula-table"></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PATTERN ATLAS
+     ══════════════════════════════════════════════════════════ -->
+<section class="section reveal" id="atlas">
+  <h2 class="section-title">Pattern Recognition Atlas <span>Click to reveal</span></h2>
+  <p class="atlas-intro">When you see a phrase on the exam, your brain should map it to the right tool instantly. Click each card to reveal it.</p>
+  <div id="atlas-grid" class="atlas-grid"></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     DOWNLOADS
+     ══════════════════════════════════════════════════════════ -->
+<section class="section reveal" id="downloads">
+  <h2 class="section-title">Downloads <span>PDFs &amp; Study Materials</span></h2>
+  <p style="margin-bottom:1.4rem;color:#555;">Compiled reference documents for Econ 101A. All written to complement the interactive sections above.</p>
+  <div class="download-grid">
+    <a class="download-card" href="pdfs/Econ101A_Comprehensive_Compendium.pdf" target="_blank">
+      <div class="dl-icon">📖</div>
+      <div class="dl-body">
+        <div class="dl-title">Comprehensive Compendium</div>
+        <div class="dl-desc">Full 25-page theory guide — Preferences through Adverse Selection, Tier 1/2/3, all proofs.</div>
+        <div class="dl-meta">PDF · 330 KB</div>
+      </div>
+    </a>
+    <a class="download-card" href="pdfs/Econ101A_Final_Reference_Guide.pdf" target="_blank">
+      <div class="dl-icon">📋</div>
+      <div class="dl-body">
+        <div class="dl-title">Final Reference Guide</div>
+        <div class="dl-desc">Condensed formula sheets and key theorems for quick pre-exam review.</div>
+        <div class="dl-meta">PDF · 284 KB</div>
+      </div>
+    </a>
+    <a class="download-card" href="pdfs/Econ101A_Final_Solutions_Manual.pdf" target="_blank">
+      <div class="dl-icon">✏️</div>
+      <div class="dl-body">
+        <div class="dl-title">Solutions Manual</div>
+        <div class="dl-desc">Worked solutions to practice problems — UMP, duality, Slutsky, GE, game theory.</div>
+        <div class="dl-meta">PDF · 305 KB</div>
+      </div>
+    </a>
+    <a class="download-card" href="pdfs/Cumulative_Final_Practice_Deck.pdf" target="_blank">
+      <div class="dl-icon">🃏</div>
+      <div class="dl-body">
+        <div class="dl-title">Cumulative Practice Deck</div>
+        <div class="dl-desc">Full exam-style problem set covering all topics from Weeks 1–18.</div>
+        <div class="dl-meta">PDF · 366 KB</div>
+      </div>
+    </a>
+    <a class="download-card" href="pdfs/Econ101A_Master_Guide.pdf" target="_blank">
+      <div class="dl-icon">🗂️</div>
+      <div class="dl-body">
+        <div class="dl-title">Master Guide</div>
+        <div class="dl-desc">High-level summary guide — key theorems, definitions, and exam strategy.</div>
+        <div class="dl-meta">PDF · 91 KB</div>
+      </div>
+    </a>
+    <a class="download-card" href="pdfs/Production_Theory_Guide.pdf" target="_blank">
+      <div class="dl-icon">🏭</div>
+      <div class="dl-body">
+        <div class="dl-title">Production Theory Guide</div>
+        <div class="dl-desc">Deep dive on cost minimisation, Shephard's Lemma, Hotelling's Lemma, profit max.</div>
+        <div class="dl-meta">PDF · 1.4 MB</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+</main><!-- /main -->
+</div><!-- /layout -->
+
+<button class="menu-btn" id="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+<!-- Scripts -->
+<script src="app.js"></script>
+<script src="d3-viz.js"></script>
+<script type="module" src="three-viz.js"></script>
+</body>
+</html>
