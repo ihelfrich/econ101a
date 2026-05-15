@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Flashcards — Econ 101A</title>
+<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="tools.css"/>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+</head>
+<body>
+
+<div class="read-progress"><div class="read-progress-bar" id="read-progress-bar"></div></div>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">∂</div>
+    <div>
+      <div class="logo-title">Econ 101A</div>
+      <div class="logo-sub">UCB · Spring 2026</div>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-group"><div class="nav-group-label">Navigation</div>
+      <a href="index.html">← Main Guide</a>
+      <a href="problems.html">Worked Problems</a>
+      <a href="workshop.html" style="color:var(--bgold);font-weight:600;">⚙ Targeted Workshop</a>
+      <a href="flashcards.html" class="active" style="color:var(--bgold);font-weight:600;">⚡ Flashcards</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Decks</div>
+      <a href="#" data-deck="all" class="deck-link active">All decks</a>
+      <a href="#" data-deck="consumer">Consumer Theory</a>
+      <a href="#" data-deck="duality">Duality</a>
+      <a href="#" data-deck="slutsky">Slutsky &amp; CV</a>
+      <a href="#" data-deck="risk">Risk &amp; EU</a>
+      <a href="#" data-deck="producer">Producer Theory</a>
+      <a href="#" data-deck="markets">Markets &amp; Game Theory</a>
+      <a href="#" data-deck="ge">General Equilibrium</a>
+      <a href="#" data-deck="traps">Exam Traps</a>
+    </div>
+    <div class="nav-group"><div class="nav-group-label">Modes</div>
+      <a href="#" data-mode="spaced" class="mode-link active">Spaced (Leitner)</a>
+      <a href="#" data-mode="cram">Cram mode (all)</a>
+      <a href="#" data-mode="weak">Weak cards only</a>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="dark-toggle" id="dark-toggle">☾ Dark</button>
+  </div>
+</aside>
+
+<main class="main flashcard-main">
+
+<header class="fc-header">
+  <h1 class="fc-title">Active Recall &amp; Spaced Repetition</h1>
+  <p class="fc-sub">The single highest-ROI study technique. Flip the card, rate honestly, the system schedules the next review. Backed by ~140 years of memory research (Ebbinghaus, Bjork, Roediger).</p>
+  <div class="fc-stats" id="fc-stats">
+    <div class="fc-stat"><div class="fc-stat-num" id="stat-due">0</div><div class="fc-stat-lbl">due now</div></div>
+    <div class="fc-stat"><div class="fc-stat-num" id="stat-known">0</div><div class="fc-stat-lbl">in box 5 (mastered)</div></div>
+    <div class="fc-stat"><div class="fc-stat-num" id="stat-learning">0</div><div class="fc-stat-lbl">learning (box 1–2)</div></div>
+    <div class="fc-stat"><div class="fc-stat-num" id="stat-total">0</div><div class="fc-stat-lbl">deck size</div></div>
+  </div>
+  <div class="fc-progress-track"><div class="fc-progress-fill" id="fc-progress-fill"></div></div>
+  <div class="fc-leitner">
+    <div class="fc-box" data-box="1"><span>Box 1</span><b id="bx1">0</b><em>today</em></div>
+    <div class="fc-box" data-box="2"><span>Box 2</span><b id="bx2">0</b><em>+2d</em></div>
+    <div class="fc-box" data-box="3"><span>Box 3</span><b id="bx3">0</b><em>+4d</em></div>
+    <div class="fc-box" data-box="4"><span>Box 4</span><b id="bx4">0</b><em>+8d</em></div>
+    <div class="fc-box" data-box="5"><span>Box 5</span><b id="bx5">0</b><em>+16d</em></div>
+  </div>
+</header>
+
+<section class="fc-stage" id="fc-stage">
+  <div class="fc-card" id="fc-card">
+    <div class="fc-card-meta">
+      <span class="fc-deck-badge" id="fc-deck-badge">deck</span>
+      <span class="fc-box-badge" id="fc-box-badge">Box 1</span>
+      <span class="fc-type-badge" id="fc-type-badge">type</span>
+    </div>
+    <div class="fc-card-front" id="fc-card-front">Loading…</div>
+    <div class="fc-card-back" id="fc-card-back" hidden>back</div>
+    <div class="fc-card-actions" id="fc-card-actions">
+      <button class="fc-btn fc-btn-flip" id="fc-flip">Show answer  <kbd>space</kbd></button>
+    </div>
+    <div class="fc-card-rate" id="fc-card-rate" hidden>
+      <button class="fc-btn fc-btn-again" data-rate="again">Forgot  <kbd>1</kbd></button>
+      <button class="fc-btn fc-btn-hard" data-rate="hard">Hard  <kbd>2</kbd></button>
+      <button class="fc-btn fc-btn-good" data-rate="good">Good  <kbd>3</kbd></button>
+      <button class="fc-btn fc-btn-easy" data-rate="easy">Easy  <kbd>4</kbd></button>
+    </div>
+  </div>
+  <div class="fc-empty" id="fc-empty" hidden>
+    <h2>🎉 No cards due right now.</h2>
+    <p>Spaced repetition works when you review at intervals — coming back tomorrow is the point. You can switch to <a href="#" data-mode="cram">Cram mode</a> for unrestricted review, or check <a href="#" data-mode="weak">Weak cards only</a> to drill what you've gotten wrong recently.</p>
+    <p><button class="fc-btn fc-btn-good" id="fc-reset-progress">Reset all progress</button></p>
+  </div>
+</section>
+
+<aside class="fc-tips">
+  <h3>The science</h3>
+  <ul>
+    <li><strong>Retrieval &gt; rereading.</strong> Pulling the answer from memory (even if you fail) builds the trace better than restudying.</li>
+    <li><strong>Spacing &gt; cramming.</strong> Each correct recall lengthens the next interval — review at the moment you're about to forget.</li>
+    <li><strong>Rate honestly.</strong> Marking "easy" when you struggled poisons the schedule. The system is forgiving; the cards come back.</li>
+    <li><strong>Interleave decks.</strong> Mixing consumer / producer / GE forces discrimination and beats blocked practice for transfer.</li>
+  </ul>
+  <h3>Keyboard</h3>
+  <ul>
+    <li><kbd>space</kbd> flip · <kbd>1–4</kbd> rate · <kbd>←</kbd> previous · <kbd>?</kbd> shortcuts</li>
+  </ul>
+</aside>
+
+</main>
+</div>
+
+<script src="study-tools.js"></script>
+<script src="flashcards-data.js"></script>
+<script src="flashcards.js"></script>
+</body>
+</html>
